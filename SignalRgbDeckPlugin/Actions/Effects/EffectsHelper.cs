@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using BarRaider.SdTools;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -15,10 +14,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         internal static string EffectsPath = string.Empty;
 
         private const string EffectHtmlFileName = "effect.html";
-        private const string EffectTitlePattern = @"<title>(.+)</title>";
-        private const string EffectPropertyPattern = @"<meta\s*(property=[\S\s]+?)\s*/?>";
-        private const string EffectAttributePropertyPattern = @"{0}\s*=\s*""(.+?)""";
-        private static readonly string[] KnownEffectAttributesList = new[]
+        internal static readonly string[] KnownEffectAttributesList = new[]
         {
             "property",
             "label",
@@ -27,6 +23,12 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             "max",
             "values",
             "default",
+        };
+
+        private static readonly List<IEffectParser> EffectParsers = new List<IEffectParser>()
+        {
+            new HtmlEffectParser(),   // primary parser
+            new RegexEffectParser(),  // fallback parser for super sloppy HTML
         };
 
         internal static InstalledEffectDetail EffectLookup(string forEffectId)
@@ -49,12 +51,22 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             if (!di.Exists)
                 return;
 
-            var effectDetailsList = di
-                .GetDirectories("*", SearchOption.TopDirectoryOnly)
-                .Where(EffectsDirectoryHasEffect)
-                .Select(EffectFromEffectDirectory)
-                .OrderBy(e => e.Name)
-                .ToList();
+            var effectDetailsList = new List<InstalledEffectDetail>();
+            foreach (var effectFolder in di.GetDirectories("*", SearchOption.TopDirectoryOnly))
+            {
+                try
+                {
+                    if (!EffectsDirectoryHasEffect(effectFolder))
+                        continue;
+
+                    effectDetailsList.Add(EffectFromEffectDirectory(effectFolder));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.WARN, $"Failed to parse effect \"{effectFolder.Name}\"! {ex.Message}");
+                }
+            }
+            effectDetailsList = effectDetailsList.OrderBy(e => e.Name).ToList();
 
             // build global effect db
             EffectsDatabase = new Dictionary<string, InstalledEffectDetail>();
@@ -75,35 +87,20 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
             var effectHtmlContent = File.ReadAllText(effectDoc.FullName);
 
-            // start bit-bangin'
-            var titleMatch = new Regex(EffectTitlePattern, RegexOptions.Multiline).Match(effectHtmlContent);
-            var effectTitle = titleMatch.Success ? titleMatch.Groups[1].Value : effectFolder.Name;
-
-            var installedEffect = new InstalledEffectDetail(effectFolder.Name, effectTitle);
-
-            var effectProps = new Regex(EffectPropertyPattern, RegexOptions.Multiline).Matches(effectHtmlContent);
-            if (effectProps.Count == 0)
-                return installedEffect;
-
-            foreach (Match effectProp in effectProps)
+            foreach (var propParser in EffectParsers)
             {
-                var foundPropElementText = effectProp.Groups[1].Value;
-                var foundProp = new EffectProperty();
+                if (!propParser.TryParse(effectHtmlContent, effectFolder.Name, out var parsedEffect))
+                    continue;
 
-                foreach (var propName in KnownEffectAttributesList)
-                {
-                    var foundAttribute = new Regex(string.Format(EffectAttributePropertyPattern, propName), RegexOptions.Multiline)
-                        .Match(foundPropElementText);
-                    if (!foundAttribute.Success)
-                        continue;
-
-                    foundProp.SetPropertyAttribute(propName, foundAttribute.Groups[1].Value);
-                }
-
-                installedEffect.Properties.Add(foundProp);
+                // success
+                return parsedEffect;
             }
 
-            return installedEffect;
+            throw new Exception($"Failed to parse effect in folder \"{effectFolder.FullName}\"!");
         }
+
+        
     }
 }
+
+   

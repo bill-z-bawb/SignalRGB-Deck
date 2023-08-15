@@ -83,6 +83,9 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.51" />
+  </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="rem IMPORTANT! You must enter the path to your elgato distro tool below (https://docs.elgato.com/sdk/icon-packs/packaging)&#xD;&#xA;set elgatoDistroToolPath=&quot;C:\Code\StreamDeckTools\DistributionToolWindows\DistributionTool.exe&quot;&#xD;&#xA;rem IMPORTANT! Ensure that the Application Assembly name (here in settings) is the actual reverse DNS name of the plugin!&#xD;&#xA;rem IMPORTANT! Ensure that the StreamDeckDeployer project is marked as a build dependency of your plugin&#xD;&#xA;&#xD;&#xA;rem ----------- No user modification required below here -----------------------------------------------------------------&#xD;&#xA;set deployerToolExe=$(SolutionDir)StreamDeckDeployer\bin\$(ConfigurationName)\net6.0\StreamDeckDeployer.exe&#xD;&#xA;set command=%25deployerToolExe%25 $(TargetName) $(TargetDir) %25elgatoDistroToolPath%25&#xD;&#xA;echo %25command%25&#xD;&#xA;call %25command%25" />
   </Target>
