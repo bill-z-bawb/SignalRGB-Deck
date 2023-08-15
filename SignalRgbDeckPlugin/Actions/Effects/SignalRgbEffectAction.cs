@@ -1,4 +1,5 @@
-﻿using BarRaider.SdTools;
+﻿using System;
+using BarRaider.SdTools;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace SignalRgbDeckPlugin.Actions.Effects
 {
     [PluginActionId("com.billzbawb.signalrgb.effect")]
-    public class SignalRgbEffectAction : KeypadBase
+    public class SignalRgbEffectAction : SignalRgbKeypadBase
     {
         private class PluginSettings
         {
@@ -146,12 +147,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         {
 
         }
-
-        public override void KeyReleased(KeyPayload payload)
-        {
-
-        }
-
+        
         public override void OnTick() { }
         
         public override void ReceivedSettings(ReceivedSettingsPayload payload)
@@ -187,5 +183,10 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         }
 
         #endregion
+
+        public override bool IsApplicationUrlValid => settings.SelectedEffect != null;
+
+        public override string ApplicationUrl => 
+            $"signalrgb://effect/apply/{Uri.EscapeDataString(settings.SelectedEffect.Name)}{settings.SelectedEffect.PropsAsApplicationUrlArgString()}";
     }
 }

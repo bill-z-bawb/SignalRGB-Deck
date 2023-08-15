@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -26,6 +28,19 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         public InstalledEffect ToInstalledEffect()
         {
             return this;
+        }
+
+        public string PropsAsApplicationUrlArgString()
+        {
+            var args = new StringBuilder();
+            var argPrefix = "?";
+            foreach (var effectProperty in Properties)
+            {
+                var val = string.IsNullOrWhiteSpace(effectProperty.Value) ? effectProperty.Default : effectProperty.Value;
+                args.Append($"{argPrefix}{Uri.EscapeDataString(effectProperty.PropertyName)}={Uri.EscapeDataString(val)}");
+                argPrefix = "&";
+            }
+            return args.ToString();
         }
     }
 }
