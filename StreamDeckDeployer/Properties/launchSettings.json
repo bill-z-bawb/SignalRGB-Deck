@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StreamDeckDeployer": {
+      "commandName": "Project",
+      "commandLineArgs": "\"com.billzbawb.signalrgb\" \"C:\\Code\\SignalRGB-Deck\\SamplePlugin\\bin\\Debug\\com.billzbawb.signalrgb.sdPlugin\" \"C:\\Code\\StreamDeckTools\\DistributionToolWindows\\DistributionTool.exe\""
+    }
+  }
+}

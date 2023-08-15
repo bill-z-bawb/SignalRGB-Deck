@@ -1,0 +1,45 @@
+{
+  "Actions": [
+    {
+      "Icon": "Images/Actions/actionListEffectHotKey",
+      "Name": "SignalRGB Effect",
+      "States": [
+        {
+          "Image": "Images/Actions/actionEffectHotKey",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Configure and create a shortcut to a SignalRGB effect.",
+      "UUID": "com.billzbawb.signalrgb.effect",
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffect.html"
+    }
+  ],
+  "Author": "Bill.Z.Bawb and BarRaider",
+  "Description": "StreamDeck integration with SignalRGB",
+  "Name": "SignalRGB-Deck",
+  "Icon": "Images/signalRgbIcon",
+  "URL": "https://github.com/bill-z-bawb/SignalRGB-Deck",
+  "Version": "0.1",
+  "CodePath": "com.billzbawb.signalrgb",
+  "Category": "SignalRGB",
+  "CategoryIcon": "Images/signalRgbIcon",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "4.4.1"
+  },
+  "ApplicationsToMonitor": {
+    "windows": [
+      "notepad.exe",
+      "calc.exe"
+    ]
+  }
+
+}
