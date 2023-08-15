@@ -1,11 +1,11 @@
 {
   "Actions": [
     {
-      "Icon": "Images/Actions/actionListEffectHotKey",
+      "Icon": "Images/Actions/Effect/actionList-painters_palette",
       "Name": "SignalRGB Effect",
       "States": [
         {
-          "Image": "Images/Actions/actionEffectHotKey",
+          "Image": "Images/Actions/Effect/action-painters_palette",
           "TitleAlignment": "middle",
           "FontSize": "12"
         }
@@ -41,5 +41,4 @@
       "calc.exe"
     ]
   }
-
 }
