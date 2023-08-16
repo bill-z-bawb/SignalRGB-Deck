@@ -4,7 +4,6 @@ using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading.Tasks;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -20,19 +19,12 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             {
                 var instance = new PluginSettings
                 {
-                    OutputFileName = string.Empty,
-                    InputString = string.Empty,
                     SelectedEffectId = string.Empty,
+                    SelectedEffect = null,
+                    InstalledEffects = new List<InstalledEffect>(),
                 };
                 return instance;
             }
-
-            [FilenameProperty]
-            [JsonProperty(PropertyName = "outputFileName")]
-            public string OutputFileName { get; set; }
-
-            [JsonProperty(PropertyName = "inputString")]
-            public string InputString { get; set; }
 
             [JsonProperty(PropertyName = "selectedEffectId")]
             public string SelectedEffectId { get; set; }
@@ -50,7 +42,8 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         private readonly PluginSettings settings;
         private const string EffectPropMarker = "-effect-prop";
-
+        private TitleParameters _currenTitleParameters = null;
+        
         #endregion
 
         #region Construction / Destruction
@@ -121,6 +114,8 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         private void Connection_OnTitleParametersDidChange(object sender, SDEventReceivedEventArgs<BarRaider.SdTools.Events.TitleParametersDidChange> e)
         {
+            _currenTitleParameters = e.Event.Payload.TitleParameters;
+            UpdateEffectButtonTitle();
         }
 
         private void Connection_OnPropertyInspectorDidDisappear(object sender, SDEventReceivedEventArgs<BarRaider.SdTools.Events.PropertyInspectorDidDisappear> e)
@@ -134,6 +129,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         private void Connection_OnDeviceDidConnect(object sender, SDEventReceivedEventArgs<BarRaider.SdTools.Events.DeviceDidConnect> e)
         {
+            
         }
 
         private void Connection_OnApplicationDidTerminate(object sender, SDEventReceivedEventArgs<BarRaider.SdTools.Events.ApplicationDidTerminate> e)
@@ -142,11 +138,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         private void Connection_OnApplicationDidLaunch(object sender, SDEventReceivedEventArgs<BarRaider.SdTools.Events.ApplicationDidLaunch> e)
         {
-        }
-
-        public override void ReceivedGlobalSettings(ReceivedGlobalSettingsPayload payload)
-        {
-
+            
         }
 
         #endregion
@@ -157,8 +149,11 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         {
 
         }
-        
-        public override void OnTick() { }
+
+        public override void OnTick()
+        {
+            _ = 0;
+        }
         
         public override void ReceivedSettings(ReceivedSettingsPayload payload)
         {
@@ -175,24 +170,29 @@ namespace SignalRgbDeckPlugin.Actions.Effects
                 var propKey = prop.Key.Replace(EffectPropMarker, string.Empty);
                 settings.SelectedEffect.SetPropertyValue(propKey, prop.Value.ToString());
             }
-            SetEffectButtonTitle(settings.SelectedEffect.Name);    
+
+            UpdateEffectButtonTitle();
             SaveSettings();
+        }
+
+        public override void ReceivedGlobalSettings(ReceivedGlobalSettingsPayload payload)
+        {
+
         }
 
         #endregion
 
         #region Private Methods
 
+        private void UpdateEffectButtonTitle()
+        {
+            if (settings?.SelectedEffect != null)
+                SetEffectButtonTitle(settings.SelectedEffect.Name);
+        }
+
         private void SetEffectButtonTitle(string title)
         {
-            Connection.SetTitleAsync(title.SplitToFitKey(
-                new TitleParameters(
-                    new FontFamily("Arial"),
-                    FontStyle.Bold,
-                    12.0,
-                    Color.White,
-                    true,
-                    TitleVerticalAlignment.Middle), 8, 8));
+            Connection.SetTitleAsync(title.SplitToFitKey(_currenTitleParameters));
         }
 
         private Task SaveSettings()

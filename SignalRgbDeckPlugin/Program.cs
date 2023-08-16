@@ -20,7 +20,7 @@ namespace SamplePlugin
             //var effectStuff = PluginAction.EffectFromEffectDirectory(new DirectoryInfo(@"C:\Users\kenpe\AppData\Local\WhirlwindFX\SignalRgb\cache\effects\-MCD91PcpkAuQtlFQw32"));
 
             // Uncomment this line of code to allow for debugging
-            //while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); }
+            //while (!System.Diagnostics.Debugger.IsAttached) { System.Threading.Thread.Sleep(100); } 
 
             SDWrapper.Run(args);
         }
