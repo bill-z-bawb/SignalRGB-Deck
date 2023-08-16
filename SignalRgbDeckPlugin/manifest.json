@@ -14,6 +14,132 @@
       "Tooltip": "Configure and create a shortcut to a SignalRGB effect.",
       "UUID": "com.billzbawb.signalrgb.effect",
       "PropertyInspectorPath": "PropertyInspector/SignalRgbEffect.html"
+    },
+    {
+      "Icon": "Images/Actions/Dashboard/actionList-control_panel",
+      "Name": "SignalRGB Dashboard View",
+      "States": [
+        {
+          "Image": "Images/Dashboard/Layouts/action-control_panel",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Dashboard view.",
+      "UUID": "com.billzbawb.signalrgb.viewdashboard"
+    },
+    {
+      "Icon": "Images/Actions/Monitoring/actionList-chart_spline",
+      "Name": "SignalRGB Monitoring View",
+      "States": [
+        {
+          "Image": "Images/Monitoring/Layouts/action-chart_spline",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Monitoring view.",
+      "UUID": "com.billzbawb.signalrgb.viewmonitoring"
+    },
+    {
+      "Icon": "Images/Actions/Cooling/actionList-fan",
+      "Name": "SignalRGB Cooling View",
+      "States": [
+        {
+          "Image": "Images/Actions/Cooling/action-fan",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Cooling view.",
+      "UUID": "com.billzbawb.signalrgb.viewcooling"
+    },
+    {
+      "Icon": "Images/Actions/Customize/actionList-equalizer",
+      "Name": "SignalRGB Customize View",
+      "States": [
+        {
+          "Image": "Images/Actions/Customize/action-equalizer",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Customize view.",
+      "UUID": "com.billzbawb.signalrgb.viewcustomize"
+    },
+    {
+      "Icon": "Images/Actions/Devices/actionList-elements_three",
+      "Name": "SignalRGB Devices View",
+      "States": [
+        {
+          "Image": "Images/Actions/Devices/action-elements_three",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Devices view.",
+      "UUID": "com.billzbawb.signalrgb.viewdevices"
+    },
+    {
+      "Icon": "Images/Actions/Layouts/actionList-elements_selection",
+      "Name": "SignalRGB Layouts View",
+      "States": [
+        {
+          "Image": "Images/Actions/Layouts/action-elements_selection",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Layouts view.",
+      "UUID": "com.billzbawb.signalrgb.viewlayout"
+    },
+    {
+      "Icon": "Images/Actions/DebugInfo/actionList-debug",
+      "Name": "SignalRGB Debug Info View",
+      "States": [
+        {
+          "Image": "Images/Actions/DebugInfo/action-debug",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Debug Info view.",
+      "UUID": "com.billzbawb.signalrgb.viewdebuginfo"
+    },
+    {
+      "Icon": "Images/Actions/Logs/actionList-text",
+      "Name": "SignalRGB Logs View",
+      "States": [
+        {
+          "Image": "Images/Actions/Logs/action-text",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Logs view.",
+      "UUID": "com.billzbawb.signalrgb.viewlogs"
+    },
+    {
+      "Icon": "Images/Actions/Dumps/actionList-dump_truck",
+      "Name": "SignalRGB Dumps View",
+      "States": [
+        {
+          "Image": "Images/Actions/Dumps/action-dump_truck",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Launch the SignalRGB Dumps view.",
+      "UUID": "com.billzbawb.signalrgb.viewdumps"
     }
   ],
   "Author": "Bill.Z.Bawb and BarRaider",
