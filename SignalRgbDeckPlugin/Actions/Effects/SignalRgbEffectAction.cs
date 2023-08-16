@@ -4,6 +4,7 @@ using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -11,6 +12,8 @@ namespace SignalRgbDeckPlugin.Actions.Effects
     [PluginActionId("com.billzbawb.signalrgb.effect")]
     public class SignalRgbEffectAction : SignalRgbKeypadBase
     {
+        #region Effect Action Settings
+
         private class PluginSettings
         {
             public static PluginSettings CreateDefaultSettings()
@@ -40,6 +43,8 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             [JsonProperty(PropertyName = "installedEffects")]
             public List<InstalledEffect> InstalledEffects { get; set; }
         }
+
+        #endregion
 
         #region Private Members
 
@@ -139,8 +144,13 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         {
         }
 
+        public override void ReceivedGlobalSettings(ReceivedGlobalSettingsPayload payload)
+        {
+
+        }
+
         #endregion
-        
+
         #region Action Behavior
 
         public override void KeyPressed(KeyPayload payload)
@@ -165,17 +175,25 @@ namespace SignalRgbDeckPlugin.Actions.Effects
                 var propKey = prop.Key.Replace(EffectPropMarker, string.Empty);
                 settings.SelectedEffect.SetPropertyValue(propKey, prop.Value.ToString());
             }
+            SetEffectButtonTitle(settings.SelectedEffect.Name);    
             SaveSettings();
         }
 
         #endregion
 
-        public override void ReceivedGlobalSettings(ReceivedGlobalSettingsPayload payload)
-        {
-
-        }
-
         #region Private Methods
+
+        private void SetEffectButtonTitle(string title)
+        {
+            Connection.SetTitleAsync(title.SplitToFitKey(
+                new TitleParameters(
+                    new FontFamily("Arial"),
+                    FontStyle.Bold,
+                    12.0,
+                    Color.White,
+                    true,
+                    TitleVerticalAlignment.Middle), 8, 8));
+        }
 
         private Task SaveSettings()
         {
@@ -184,9 +202,13 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         #endregion
 
+        #region SignalRGB Implementation
+
         public override bool IsApplicationUrlValid => settings.SelectedEffect != null;
 
         public override string ApplicationUrl => 
             $"signalrgb://effect/apply/{Uri.EscapeDataString(settings.SelectedEffect.Name)}{settings.SelectedEffect.PropsAsApplicationUrlArgString()}";
+
+        #endregion
     }
 }

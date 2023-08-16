@@ -16,17 +16,17 @@
       "PropertyInspectorPath": "PropertyInspector/SignalRgbEffect.html"
     },
     {
-      "Icon": "Images/Actions/Dashboard/actionList-control_panel",
-      "Name": "SignalRGB Dashboard View",
+      "Icon": "Images/Actions/Dashboard/actionList-home",
+      "Name": "SignalRGB Home View",
       "States": [
         {
-          "Image": "Images/Dashboard/Layouts/action-control_panel",
+          "Image": "Images/Actions/Dashboard/action-home",
           "TitleAlignment": "middle",
           "FontSize": "12"
         }
       ],
       "SupportedInMultiActions": true,
-      "Tooltip": "Launch the SignalRGB Dashboard view.",
+      "Tooltip": "Launch the SignalRGB Home view.",
       "UUID": "com.billzbawb.signalrgb.viewdashboard"
     },
     {
@@ -34,7 +34,7 @@
       "Name": "SignalRGB Monitoring View",
       "States": [
         {
-          "Image": "Images/Monitoring/Layouts/action-chart_spline",
+          "Image": "Images/Actions/Monitoring/action-chart_spline",
           "TitleAlignment": "middle",
           "FontSize": "12"
         }
@@ -97,7 +97,7 @@
       ],
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Layouts view.",
-      "UUID": "com.billzbawb.signalrgb.viewlayout"
+      "UUID": "com.billzbawb.signalrgb.viewlayouts"
     },
     {
       "Icon": "Images/Actions/DebugInfo/actionList-debug",

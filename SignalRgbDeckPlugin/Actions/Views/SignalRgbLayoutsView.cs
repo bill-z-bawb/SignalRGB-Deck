@@ -2,7 +2,7 @@
 
 namespace SignalRgbDeckPlugin.Actions.Views
 {
-    [PluginActionId("com.billzbawb.signalrgb.viewlayout")]
+    [PluginActionId("com.billzbawb.signalrgb.viewlayouts")]
     public class SignalRgbLayoutsView : SignalRgbViewActionBase
     {
         public SignalRgbLayoutsView(ISDConnection connection, InitialPayload payload) : base(connection, payload)
