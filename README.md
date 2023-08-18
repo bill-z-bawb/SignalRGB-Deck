@@ -13,7 +13,8 @@ This plugin is designed to perform two different types of actions:
 In all honesty, this plugin isn't anything that you couldn't already do with existing StreamDeck plugins, it's just that the 
 SignalRGB-Deck pluin makes it a whole lot easier (as opposed to bangin' yer way thru a big, gross Windows Bat plugin command or playing keyboard shortcut games).
 
-> **Note**: SignalRGB-Deck can only detect SignalRGB Effects that are actually installed to your local machine. In other words, it is not capable of making remote requests to SignalRGB's Effect Hosting Service in order to download and install a new Effect.
+> [!NOTE]
+> SignalRGB-Deck can only detect SignalRGB Effects that are actually installed to your local machine. In other words, it is not capable of making remote requests to SignalRGB's Effect Hosting Service in order to download and install a new Effect.
 
 
 
@@ -35,7 +36,8 @@ From the actions list, drag the action titled `SignalRGB Effect` onto one of you
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/pi-effect-90s.png)
 
-> **Hint**: While it's possible to fully configure an Effect to your liking using only the StreamDeck settings, you won't get a realtime view of what;s happening. SignalRGBs current API just doesn't support it (likely doesn't need to...). As such, your best bet here is to use launch the `Customize View`, then, in the SignalRGB app, apply the desired effect and then configure it. When done, simply copy the settings from SignalRGB over to SignalRGB-Deck plugin (they should always match one for one and will always share the same name).
+> [!HINT]
+> While it's possible to fully configure an Effect to your liking using only the StreamDeck settings, you won't get a realtime view of what;s happening. SignalRGBs current API just doesn't support it (likely doesn't need to...). As such, your best bet here is to use launch the `Customize View`, then, in the SignalRGB app, apply the desired effect and then configure it. When done, simply copy the settings from SignalRGB over to SignalRGB-Deck plugin (they should always match one for one and will always share the same name).
 
 Here is a clipped view of an Effect's settings as seen from the SignalRGB app:
 
@@ -45,9 +47,11 @@ And, when you choose the same Effect from the SignalRGB-Deck Plugin, yio'll see:
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/pi-effect-meteors.png)
 
-> **Note**: For the most part, all of the SignalRGB properties you might see in the StreamDeck settings are reproesented by intuituve surrogate controls. For instance, a SignalRGB range setting is shown as a simple slider control and a SignalRGB color selector shows a standard color picker control. The one exception to this is with SignalRGB's "hue control". This is a numerical value between 0 and 359 that alters the (you guessed it) hue of some Effect property. The SignalRGB app presents this control with a nice colored bar slider so you can see how the changes manifest themselves. Unfortunately, there is no out of the box equivelant control for StreamDeck and I'm not up for making a custom one.
+> [!NOTE]
+> For the most part, all of the SignalRGB properties you might see in the StreamDeck settings are reproesented by intuituve surrogate controls. For instance, a SignalRGB range setting is shown as a simple slider control and a SignalRGB color selector shows a standard color picker control. The one exception to this is with SignalRGB's "hue control". This is a numerical value between 0 and 359 that alters the (you guessed it) hue of some Effect property. The SignalRGB app presents this control with a nice colored bar slider so you can see how the changes manifest themselves. Unfortunately, there is no out of the box equivelant control for StreamDeck and I'm not up for making a custom one.
 
-> **Warning**: Navigating away from the current Effect to a new one will cause you to lose any work you've put into configuring it (even if you select it again). Effects will always load with their properties set to default values.
+> [!WARNING]
+> Navigating away from the current Effect to a new one will cause you to lose any work you've put into configuring it (even if you select it again). Effects will always load with their properties set to default values.
 
 ## The SignalRGB View Actions
 
@@ -55,7 +59,8 @@ SignalRGB currently supports opening of specific views within itself through the
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/view-buttons.png)
 
-> **Note**: There is a known issue where launching a SignalRGB View when the SignalRGB app already has focus will cause the app to minimize itself. I can't do anything about this without gross Windows hackery. There is probably a reasonable assumption that the application URLs the plugin relies upon are used when the app *does not* have focus.
+> [!NOTE]
+> There is a known issue where launching a SignalRGB View when the SignalRGB app already has focus will cause the app to minimize itself. I can't do anything about this without gross Windows hackery. There is probably a reasonable assumption that the application URLs the plugin relies upon are used when the app *does not* have focus.
 
 ## Credit and Thanks
 
