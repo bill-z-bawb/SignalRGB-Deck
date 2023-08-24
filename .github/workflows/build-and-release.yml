@@ -23,7 +23,10 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore Bill-Z-Bawb-StreamDeck-Plugins.sln
  
-    - name: Build and Publish App
+    - name: Build and Publish Plugin Deployer Tool
+      run: msbuild StreamDeckDeployer\StreamDeckDeployer.csproj /p:Configuration=Publish
+    
+    - name: Build and Publish Plugin
       run: msbuild SignalRgbDeckPlugin\SignalRgbDeckPlugin.csproj /p:Configuration=Publish
     
     - name: Upload Artifact
