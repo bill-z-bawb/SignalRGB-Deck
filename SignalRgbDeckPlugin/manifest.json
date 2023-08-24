@@ -143,11 +143,11 @@
     }
   ],
   "Author": "William Z. Bawb and BarRaider",
-  "Description": "StreamDeck integration with SignalRGB",
+  "Description": "StreamDeck integration with SignalRGB. Use it to make shortcuts for any SignalRGB Effect with any number of custom settings and to launch almost any SignalRGB view.",
   "Name": "SignalRGB-Deck",
   "Icon": "Images/signalRgbIcon",
   "URL": "https://github.com/bill-z-bawb/SignalRGB-Deck",
-  "Version": "0.1",
+  "Version": "1.0",
   "CodePath": "com.billzbawb.signalrgb",
   "Category": "SignalRGB",
   "CategoryIcon": "Images/signalRgbIcon",
@@ -160,11 +160,5 @@
   "SDKVersion": 2,
   "Software": {
     "MinimumVersion": "4.4.1"
-  },
-  "ApplicationsToMonitor": {
-    "windows": [
-      "notepad.exe",
-      "calc.exe"
-    ]
   }
 }
