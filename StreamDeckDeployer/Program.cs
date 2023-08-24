@@ -1,6 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Diagnostics;
-using System.Drawing;
 using System.IO.Compression;
 using Microsoft.Win32;
 
@@ -97,7 +96,10 @@ void Validate(out string name, out string bin, out string distroTool, out bool s
             throw new ArgumentException($"The \"/{PluginBinarySourceKey}\" is missing! This arg specifies the location path of plugin's binary components.");
         Console.WriteLine($"{GetHelpVarName(PluginBinarySourceKey)}{bin}");
 
-        distroTool = GetArgValue(PluginDistroToolKey) ?? GetDefaultDistroToolPath().FullName;
+        distroTool = GetArgValue(PluginDistroToolKey);
+        distroTool = string.IsNullOrWhiteSpace(distroTool)
+            ? GetDefaultDistroToolPath().FullName
+            : distroTool;
         Console.WriteLine($"{GetHelpVarName(PluginDistroToolKey)}{distroTool}");
 
         shouldInstallPlugin = HasArgKey(InstallPluginKey);
@@ -226,6 +228,9 @@ void BuildNewSdPlugin(string pluginName, DirectoryInfo buildArtifacts, FileInfo 
     Console.WriteLine($"\nBuilding StreamDeck plugin \"{pluginName}\" to \"{pluginOutputFile.FullName}\"...\n");
     if (pluginOutputFile.Exists)
         pluginOutputFile.Delete();
+
+    if (!pluginOutputFile.Directory.Exists)
+        pluginOutputFile.Directory.Create();
 
     Console.ForegroundColor = ConsoleColor.DarkGray;
     RenderHr('-', ConsoleColor.DarkGray);
