@@ -1,8 +1,24 @@
 {
   "profiles": {
-    "StreamDeckDeployer": {
+    "Install w/ Outpur Dir": {
       "commandName": "Project",
-      "commandLineArgs": "\"com.billzbawb.signalrgb\" \"C:\\Code\\SignalRGB-Deck\\SamplePlugin\\bin\\Debug\\com.billzbawb.signalrgb.sdPlugin\" \"C:\\Code\\StreamDeckTools\\DistributionToolWindows\\DistributionTool.exe\""
+      "commandLineArgs": "/name=\"com.billzbawb.signalrgb\" /bin=\"C:\\Code\\SignalRGB-Deck\\SignalRgbDeckPlugin\\bin\\Debug\\com.billzbawb.signalrgb.sdPlugin\" /output=\"C:\\temp\" /install"
+    },
+    "Install w/o Outpur Dir": {
+      "commandName": "Project",
+      "commandLineArgs": "/name=\"com.billzbawb.signalrgb\" /bin=\"C:\\Code\\SignalRGB-Deck\\SignalRgbDeckPlugin\\bin\\Debug\\com.billzbawb.signalrgb.sdPlugin\" /install"
+    },
+    "Build w/ Default Distro": {
+      "commandName": "Project",
+      "commandLineArgs": "/name=\"com.billzbawb.signalrgb\" /bin=\"C:\\Code\\SignalRGB-Deck\\SignalRgbDeckPlugin\\bin\\Debug\\com.billzbawb.signalrgb.sdPlugin\" /output=\"C:\\temp\""
+    },
+    "Build w/ Custom Distro": {
+      "commandName": "Project",
+      "commandLineArgs": "/name=\"com.billzbawb.signalrgb\" /bin=\"C:\\Code\\SignalRGB-Deck\\SignalRgbDeckPlugin\\bin\\Debug\\com.billzbawb.signalrgb.sdPlugin\" /output=\"C:\\temp\" /distroTool=\"C:\\Code\\StreamDeckTools\\DistributionToolWindows\\DistributionTool.exe\""
+    },
+    "Dump Help": {
+      "commandName": "Project",
+      "commandLineArgs": "/help"
     }
   }
 }
