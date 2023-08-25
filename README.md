@@ -3,7 +3,7 @@
 
 ## Description
 
-SignalRGB-Deck is not an official plugin. I am not associated with SignalRGB or Whirlwhind in any manner (except being a huge fan).
+SignalRGB-Deck is not an official plugin. I am not associated with SignalRGB or Whirlwind in any manner (except being a huge fan).
 
 This plugin is designed to perform two different types of actions:
 
@@ -11,7 +11,7 @@ This plugin is designed to perform two different types of actions:
 - Launch SignalRGB Views: A SignalRGB View is typically associated with items in the left-hand nav bar of the SignalRGB app. For instance, you can assign a StreamDeck button to an action that opens SignalRGB directly to the `Layouts` section of the SignalRGB app.
 
 In all honesty, this plugin isn't anything that you couldn't already do with existing StreamDeck plugins, it's just that the 
-SignalRGB-Deck pluin makes it a whole lot easier (as opposed to bangin' yer way thru a big, gross Windows Bat plugin command or playing keyboard shortcut games).
+SignalRGB-Deck plugin makes it a whole lot easier (as opposed to bangin' yer way thru a big, gross Windows Bat plugin command or playing keyboard shortcut games).
 
 > [!NOTE]
 > SignalRGB-Deck can only detect SignalRGB Effects that are actually installed to your local machine. In other words, it is not capable of making remote requests to SignalRGB's Effect Hosting Service in order to download and install a new Effect.
@@ -20,7 +20,7 @@ SignalRGB-Deck pluin makes it a whole lot easier (as opposed to bangin' yer way 
 
 ## Available SignalRGB Actions
 
-At the time of this writing, the SignalRGB-Deck Plugin caontains a single action for mapping Effects and several others for launching SignalRGB Views.
+At the time of this writing, the SignalRGB-Deck Plugin contains a single action for mapping Effects and several others for launching SignalRGB Views.
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/actions-list-effect.png)
 
@@ -43,19 +43,19 @@ Here is a clipped view of an Effect's settings as seen from the SignalRGB app:
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/srgb-effect-meteors.png)
 
-And, when you choose the same Effect from the SignalRGB-Deck Plugin, yio'll see:
+And, when you choose the same Effect from the SignalRGB-Deck Plugin, you'll see:
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/pi-effect-meteors.png)
 
 > [!NOTE]
-> For the most part, all of the SignalRGB properties you might see in the StreamDeck settings are reproesented by intuituve surrogate controls. For instance, a SignalRGB range setting is shown as a simple slider control and a SignalRGB color selector shows a standard color picker control. The one exception to this is with SignalRGB's "hue control". This is a numerical value between 0 and 359 that alters the (you guessed it) hue of some Effect property. The SignalRGB app presents this control with a nice colored bar slider so you can see how the changes manifest themselves. Unfortunately, there is no out of the box equivelant control for StreamDeck and I'm not up for making a custom one.
+> For the most part, all of the SignalRGB properties you might see in the StreamDeck settings are represented by intuitive surrogate controls. For instance, a SignalRGB range setting is shown as a simple slider control and a SignalRGB color selector shows a standard color picker control. The one exception to this is with SignalRGB's "hue control". This is a numerical value between 0 and 359 that alters the (you guessed it) hue of some Effect property. The SignalRGB app presents this control with a nice colored bar slider so you can see how the changes manifest themselves. Unfortunately, there is no out of the box equivalent control for StreamDeck and I'm not up for making a custom one.
 
 > [!WARNING]
 > Navigating away from the current Effect to a new one will cause you to lose any work you've put into configuring it (even if you select it again). Effects will always load with their properties set to default values.
 
 ## The SignalRGB View Actions
 
-SignalRGB currently supports opening of specific views within itself through the use of "application URLs". SignalRGB-Deck takes advantage of this and maps all avaiable URLs to a StreamDeck action. To use one, just locate the desired view in the actions list and drag it into one of your StreamDeck's buttons. Pressing this buttom will open the corresponding view in the SignalRGB app.
+SignalRGB currently supports opening of specific views within itself through the use of "application URLs". SignalRGB-Deck takes advantage of this and maps all available URLs to a StreamDeck action. To use one, just locate the desired view in the actions list and drag it into one of your StreamDeck's buttons. Pressing this button will open the corresponding view in the SignalRGB app.
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/view-buttons.png)
 
