@@ -16,6 +16,49 @@
       "PropertyInspectorPath": "PropertyInspector/SignalRgbEffect.html"
     },
     {
+      "Icon": "Images/Actions/Effect/actionList-previous-effect",
+      "Name": "SignalRGB Previous Effect",
+      "States": [
+        {
+          "Image": "Images/Actions/Effect/action-previous-effect",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Create a shortcut to the previous SignalRGB effect.",
+      "UUID": "com.billzbawb.signalrgb.previouseffect"
+    },
+    {
+      "Icon": "Images/Actions/Layout/actionList-front",
+      "Name": "SignalRGB Layout",
+      "States": [
+        {
+          "Image": "Images/Actions/Layout/action-front",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Create a shortcut to a SignalRGB layout.",
+      "UUID": "com.billzbawb.signalrgb.layout",
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbLayout.html"
+    },
+    {
+      "Icon": "Images/Actions/Layout/actionList-previous-layout",
+      "Name": "SignalRGB Previous Layout",
+      "States": [
+        {
+          "Image": "Images/Actions/Layout/action-previous-effect",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Create a shortcut to the previous SignalRGB layout.",
+      "UUID": "com.billzbawb.signalrgb.previouslayout"
+    },
+    {
       "Icon": "Images/Actions/Dashboard/actionList-home",
       "Name": "SignalRGB Home View",
       "States": [

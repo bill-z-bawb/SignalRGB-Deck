@@ -1,10 +1,4 @@
-﻿function resetCounter() {
-    var payload = {};
-    payload.property_inspector = 'resetCounter';
-    sendPayloadToPlugin(payload);
-}
-
-function getSelectedEffectId() {
+﻿function getSelectedEffectId() {
     const effectDropdown = document.getElementById("installedEffects");
     return effectDropdown.value;
 }

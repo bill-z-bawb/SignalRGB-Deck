@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
+    <meta name=apple-mobile-web-app-capable content=yes>
+    <meta name=apple-mobile-web-app-status-bar-style content=black>
+    <title>SignalRGB Layout Settings</title>
+    <link rel="stylesheet" href="sdpi.css">
+    <script src="sdtools.common.js"></script>
+</head>
+<body>
+    <hr />
+    <div type="group" class="sdpi-item" id="dvEffectWrapper">
+        <div class="sdpi-item-label" id="effectsGroupLabel">Choose the SignalRGB Layout for this action</div>
+        <div class="sdpi-wrapper" id="dvSdpiWrapper">
+            <div class="sdpi-item" id="dvEffect">
+                <div class="sdpi-item-label">SignalRGB Layout</div>
+                <select class="sdpi-item-value select sdProperty sdList" id="userLayouts" oninput="setSettings()" sdListTextProperty="name" sdListValueProperty="id" sdValueField="selectedLayoutId"></select>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

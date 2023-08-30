@@ -1,8 +1,8 @@
-﻿using System;
-using BarRaider.SdTools;
+﻿using BarRaider.SdTools;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -215,13 +215,10 @@ namespace SignalRgbDeckPlugin.Actions.Effects
                 url.Append("signalrgb://effect/apply/");
 
                 // add the effect's name
-                url.Append(settings.SelectedEffect.Name);
+                url.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
 
                 // add the effect's settings
                 url.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
-
-                // direction for silent launch
-                url.Append($"&{SilentLaunchRequest}");
 
                 return url.ToString();
             }

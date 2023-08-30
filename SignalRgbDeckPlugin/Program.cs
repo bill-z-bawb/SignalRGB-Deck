@@ -1,18 +1,21 @@
 ﻿using BarRaider.SdTools;
+using SignalRgbDeckPlugin.Actions.Layouts;
 
-namespace SamplePlugin
+namespace SignalRgbDeckPlugin
 {
     class Program
     {
         static void Main(string[] args)
         {
+            //var layout = LayoutsHelper.LayoutLookup("mylayout2");
+
             //var rootDi = new DirectoryInfo(@"C:\Users\kenpe\AppData\Local\WhirlwindFX\SignalRgb\cache\effects");
             //var singleEffectTestLoad =
             //    PluginAction.EffectFromEffectDirectory(
             //        new DirectoryInfo(Path.Combine(rootDi.FullName, @"-M6kJJl-tlZKQLjDg2ng")));
 
             //var allEffectsTest = new List<InstalledEffectDetail>();
-            
+
             //allEffectsTest.AddRange(rootDi.GetDirectories("*", SearchOption.TopDirectoryOnly).Where(PluginAction.EffectsDirectoryHasEffect).Select(PluginAction.EffectFromEffectDirectory));
 
             //var allTypes = allEffectsTest.SelectMany(e => e.Properties).Select(p => p.Type).Distinct().OrderBy(t => t).ToList();

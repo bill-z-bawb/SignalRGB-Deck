@@ -98,8 +98,6 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
             throw new Exception($"Failed to parse effect in folder \"{effectFolder.FullName}\"!");
         }
-
-        
     }
 }
 

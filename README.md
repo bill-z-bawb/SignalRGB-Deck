@@ -5,9 +5,10 @@
 
 SignalRGB-Deck is not an official plugin. I am not associated with SignalRGB or Whirlwind in any manner (except being a huge fan).
 
-This plugin is designed to perform two different types of actions:
+This plugin is designed to perform a few different types of actions:
 
 - Apply SignalRGB Effects: For any SignalRGB effect you have installed, it will appear as an option in the action's `SignalRGB Effect` dropdown menu. When a new Effect is selected, its unique settings will appear below it in the section titled `Effect Settings`. Essentially, this means that you can store many different profiles for the same SignalRGB Effect.
+- Apply one of your SignalRGB layouts: SignalRGB-Deck will find all of your existing layouts and allow you to create shortcut actions.
 - Launch SignalRGB Views: A SignalRGB View is typically associated with items in the left-hand nav bar of the SignalRGB app. For instance, you can assign a StreamDeck button to an action that opens SignalRGB directly to the `Layouts` section of the SignalRGB app.
 
 In all honesty, this plugin isn't anything that you couldn't already do with existing StreamDeck plugins, it's just that the 
@@ -20,17 +21,23 @@ SignalRGB-Deck plugin makes it a whole lot easier (as opposed to bangin' yer way
 
 ## Available SignalRGB Actions
 
-At the time of this writing, the SignalRGB-Deck Plugin contains a single action for mapping Effects and several others for launching SignalRGB Views.
+SignalRGB-Deck Plugin contains am action for mapping Effects and Layouts to StreamDeck buttons and several others for launching SignalRGB Views.
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/actions-list-effect.png)
 
-The Effect Action 
+Effect Actions
+
+![](./SignalRgbDeckPlugin/Images/ReadMeResources/actions-list-layout.png)
+
+Layout Actions
 
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/actions-list-views.png)
 
-The View Actions
+View Actions
 
-## The SignalRGB Effect Action
+## The SignalRGB Effect Actions
+
+### Custom Effect Actions
 
 From the actions list, drag the action titled `SignalRGB Effect` onto one of your StreamDeck buttons. In the action's Property Inspector (action settings) you'll now see an empty dropdown menu labeled as `SignalRGB Effect`. Simply choose the Effect you'd like apply when that button is pressed. Upon selecting the desired effect, you'll be presented with that Effect's unique settings. Each SignalRGB Effect has its own custom properties and, as such, each time you select a new Effect, you'll see that property list change.
 
@@ -52,6 +59,23 @@ And, when you choose the same Effect from the SignalRGB-Deck Plugin, you'll see:
 
 > [!WARNING]
 > Navigating away from the current Effect to a new one will cause you to lose any work you've put into configuring it (even if you select it again). Effects will always load with their properties set to default values.
+
+### Previous Effect Action
+
+You can also use SignalRGB-Deck to create a shortcut to your last used SignalRGB effect. In order to do this, drag the action titled `SignalRGB Previous Effect` onto one of your StreamDeck buttons. There are no settings for this action.
+
+## The SignalRGB Layout Actions
+
+### User Layout Actions
+
+From the actions list, drag the action titled `SignalRGB Layout` onto one of your StreamDeck buttons. In the action's Property Inspector (action settings) you'll now see an empty dropdown menu labeled as `SignalRGB Layout`. Simply choose the Layout you'd like apply when that button is pressed.
+
+![](./SignalRgbDeckPlugin/Images/ReadMeResources/pi-layout-default.png)
+
+
+### Previous Layout Action
+
+You can also use SignalRGB-Deck to create a shortcut to your last used SignalRGB layout. In order to do this, drag the action titled `SignalRGB Previous Layout` onto one of your StreamDeck buttons. There are no settings for this action.
 
 ## The SignalRGB View Actions
 
