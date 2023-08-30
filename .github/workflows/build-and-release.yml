@@ -73,7 +73,7 @@ jobs:
       - name: Bump manifest.json version
         uses: jossef/action-set-json-field@v2.1
         with:
-          file: SignalRgbDeckPlugin\manifest.json
+          file: SignalRgbDeckPlugin/manifest.json
           field: Version
           value: ${{ steps.bump.outputs.newVersion }}
 
