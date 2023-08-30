@@ -143,6 +143,20 @@
       "UUID": "com.billzbawb.signalrgb.viewlayouts"
     },
     {
+      "Icon": "Images/Actions/Plugins/actionList-plug",
+      "Name": "SignalRGB Plugins Folder",
+      "States": [
+        {
+          "Image": "Images/Actions/Plugins/action-plug",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Show the SignalRGB User Plugins folder.",
+      "UUID": "com.billzbawb.signalrgb.viewplugins"
+    },
+    {
       "Icon": "Images/Actions/DebugInfo/actionList-debug",
       "Name": "SignalRGB Debug Info View",
       "States": [
