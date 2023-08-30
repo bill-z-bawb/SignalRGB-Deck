@@ -197,6 +197,20 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Dumps view.",
       "UUID": "com.billzbawb.signalrgb.viewdumps"
+    },
+    {
+      "Icon": "Images/Actions/Restart/actionList-rotate_left",
+      "Name": "SignalRGB Restart",
+      "States": [
+        {
+          "Image": "Images/Actions/Restart/action-rotate_left",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Restart the SignalRGB application.",
+      "UUID": "com.billzbawb.signalrgb.apprestart"
     }
   ],
   "Author": "William Z. Bawb and BarRaider",
