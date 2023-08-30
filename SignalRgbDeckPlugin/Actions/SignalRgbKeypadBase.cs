@@ -5,6 +5,8 @@ namespace SignalRgbDeckPlugin.Actions
 {
     public abstract class SignalRgbKeypadBase : KeypadBase
     {
+        public const string SilentLaunchRequest = "-silentlaunch-";
+
         protected SignalRgbKeypadBase(ISDConnection connection, InitialPayload payload) : base(connection, payload)
         {
         }
