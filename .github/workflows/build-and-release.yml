@@ -63,12 +63,19 @@ jobs:
         with:
           ref: master
 
-      - name: Bump plugin build version
+      - name: Bump VS build version
         id: bump
         uses: vers-one/dotnet-project-version-updater@v1.3
         with:
           file: "SignalRgbDeckPlugin/SignalRgbDeckPlugin.csproj"
           version: bump-build
+
+      - name: Bump manifest.json version
+        uses: jossef/action-set-json-field@v2.1
+        with:
+          file: SignalRgbDeckPlugin\manifest.json
+          field: Version
+          value: ${{ steps.bump.outputs.newVersion }}
 
       - name: Commit Version Bump
         run: |
