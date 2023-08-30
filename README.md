@@ -35,6 +35,10 @@ Layout Actions
 
 View Actions
 
+![](./SignalRgbDeckPlugin/Images/ReadMeResources/actions-list-app.png)
+
+App Actions
+
 ## The SignalRGB Effect Actions
 
 ### Custom Effect Actions
@@ -85,6 +89,12 @@ SignalRGB currently supports opening of specific views within itself through the
 
 > [!NOTE]
 > There is a known issue where launching a SignalRGB View when the SignalRGB app already has focus will cause the app to minimize itself. I can't do anything about this without gross Windows hackery. There is probably a reasonable assumption that the application URLs the plugin relies upon are used when the app *does not* have focus.
+
+## The SignalRGB App Actions
+
+### Restart SignalRGB
+
+If you'd like to have a StreamDeck button mapped to restarting SignalRGB (probably most useful for SignalRGB Effect Developers), drag the action named `SignalRGB Restart` onto one of your StreamDeck buttons. There are no settings for this action.
 
 ## Credit and Thanks
 
