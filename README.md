@@ -37,7 +37,7 @@ From the actions list, drag the action titled `SignalRGB Effect` onto one of you
 ![](./SignalRgbDeckPlugin/Images/ReadMeResources/pi-effect-90s.png)
 
 > [!IMPORTANT]
-> While it's possible to fully configure an Effect to your liking using only the StreamDeck settings, you won't get a realtime view of what;s happening. SignalRGBs current API just doesn't support it (likely doesn't need to...). As such, your best bet here is to use launch the `Customize View`, then, in the SignalRGB app, apply the desired effect and then configure it. When done, simply copy the settings from SignalRGB over to SignalRGB-Deck plugin (they should always match one for one and will always share the same name).
+> While it's possible to fully configure an Effect to your liking using only the StreamDeck settings, you won't get a realtime view of what's happening. SignalRGBs current API just doesn't support it (likely doesn't need to...). As such, your best bet here is to use launch the `Customize View`, then, in the SignalRGB app, apply the desired effect and then configure it. When done, simply copy the settings from SignalRGB over to SignalRGB-Deck plugin (they should always match one for one and will always share the same name).
 
 Here is a clipped view of an Effect's settings as seen from the SignalRGB app:
 

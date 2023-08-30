@@ -4,6 +4,7 @@ using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -152,7 +153,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         public override void OnTick()
         {
-            _ = 0;
+            
         }
         
         public override void ReceivedSettings(ReceivedSettingsPayload payload)
@@ -206,8 +207,25 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         public override bool IsApplicationUrlValid => settings.SelectedEffect != null;
 
-        public override string ApplicationUrl => 
-            $"signalrgb://effect/apply/{Uri.EscapeDataString(settings.SelectedEffect.Name)}{settings.SelectedEffect.PropsAsApplicationUrlArgString()}";
+        public override string ApplicationUrl
+        {
+            get
+            {
+                var url = new StringBuilder();
+                url.Append("signalrgb://effect/apply/");
+
+                // add the effect's name
+                url.Append(settings.SelectedEffect.Name);
+
+                // add the effect's settings
+                url.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
+
+                // direction for silent launch
+                url.Append($"&{SilentLaunchRequest}");
+
+                return url.ToString();
+            }
+        }
 
         #endregion
     }

@@ -30,7 +30,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             return this;
         }
 
-        public string PropsAsApplicationUrlArgString()
+        public string PropsAsApplicationUrlArgString(bool requestSilentLaunch)
         {
             var args = new StringBuilder();
             var argPrefix = "?";
@@ -40,6 +40,12 @@ namespace SignalRgbDeckPlugin.Actions.Effects
                 args.Append($"{argPrefix}{Uri.EscapeDataString(effectProperty.PropertyName)}={Uri.EscapeDataString(val)}");
                 argPrefix = "&";
             }
+
+            if (requestSilentLaunch)
+            {
+                args.Append($"{argPrefix}{SignalRgbKeypadBase.SilentLaunchRequest}");
+            }
+
             return args.ToString();
         }
     }
