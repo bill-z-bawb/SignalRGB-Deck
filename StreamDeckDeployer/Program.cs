@@ -16,6 +16,7 @@ try
 finally
 {
     Console.ResetColor();
+    Console.WriteLine();
     PluginDeploymentHelper.RenderHr();
     Environment.Exit(0);
 }
