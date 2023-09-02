@@ -19,6 +19,10 @@
     "Dump Help": {
       "commandName": "Project",
       "commandLineArgs": "/help"
+    },
+    "Trigger Release": {
+      "commandName": "Project",
+      "commandLineArgs": "/triggerRelease"
     }
   }
 }
