@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -47,6 +49,45 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             }
 
             return args.ToString();
+        }
+
+        private const string CachedEffectHtmlFileName = "effect.html";
+        private static readonly List<IEffectParser> EffectParsers = new List<IEffectParser>()
+        {
+            new HtmlEffectParser(),   // primary parser
+            new RegexEffectParser(),  // fallback parser for super sloppy HTML
+        };
+
+        public static InstalledEffectDetail EffectFromCacheDirectory(DirectoryInfo effectFolder)
+        {
+            var effectDoc = new FileInfo(Path.Combine(effectFolder.FullName, CachedEffectHtmlFileName));
+            return EffectFromHtml(effectDoc, effectFolder.Name);
+        }
+
+        public static bool EffectsCacheDirectoryHasEffect(DirectoryInfo effectFolder)
+        {
+            return effectFolder.GetFiles("*", SearchOption.TopDirectoryOnly)
+                .Any(f => f.Name.Equals(CachedEffectHtmlFileName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public static InstalledEffectDetail EffectFromHtml(FileInfo effect, string effectId = null)
+        {
+            if (!effect.Exists)
+                throw new FileNotFoundException($"Effect \"{effect.FullName}\" does not exist!", effect.FullName);
+
+            effectId = effectId ?? effect.HashCode(MD5.Create());
+            var effectHtmlContent = File.ReadAllText(effect.FullName);
+
+            foreach (var propParser in EffectParsers)
+            {
+                if (!propParser.TryParse(effectHtmlContent, effectId, out var parsedEffect))
+                    continue;
+
+                // success
+                return parsedEffect;
+            }
+
+            throw new Exception($"Failed to parse effect \"{effect.FullName}\"!");
         }
     }
 }
