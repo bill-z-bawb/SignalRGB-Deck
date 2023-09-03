@@ -185,18 +185,13 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         #region Private Methods
 
-        private void UpdateEffectButtonTitle()
+        protected override void UpdateEffectButtonTitle()
         {
             if (settings?.SelectedEffect != null)
                 SetEffectButtonTitle(settings.SelectedEffect.Name);
         }
 
-        private void SetEffectButtonTitle(string title)
-        {
-            Connection.SetTitleAsync(title.SplitToFitKey(_currenTitleParameters));
-        }
-
-        private Task SaveSettings()
+        protected override Task SaveSettings()
         {
             return Connection.SetSettingsAsync(JObject.FromObject(settings));
         }
