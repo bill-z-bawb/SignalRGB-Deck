@@ -31,7 +31,7 @@ namespace StreamDeckDeployer
 
                 var client = GetClient(gitHubPat);
                 GetPluginProps(pluginDir, out var pluginName, out var nextVersion);
-                var nextVersionStr = nextVersion.ToString(3);
+                var nextVersionStr = $"v{nextVersion.ToString(3)}";
                 var branchSha = ShaForBranch(client, branch);
 
                 Console.WriteLine($"You are about to release {pluginName} {nextVersionStr}...");
