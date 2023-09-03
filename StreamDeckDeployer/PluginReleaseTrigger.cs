@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics;
+using System.Drawing;
+using Newtonsoft.Json;
 using Octokit;
 using Helper = StreamDeckDeployer.PluginDeploymentHelper;
 
@@ -46,17 +48,13 @@ namespace StreamDeckDeployer
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(
-                    $"\n\nCreated tag \"{releaseTagRef.Ref}\" at commit \"{releaseTagRef.Object.Sha}\", GHA should be running now, would you like to go there and see? [y / n]: ");
+                    $"\n\nCreated tag \"{releaseTagRef.Ref}\" at commit \"{releaseTagRef.Object.Sha}\", GHA should be running now, would you like to monitor this release run? [y / n]: ");
 
                 var openGhActions = Console.ReadKey();
                 if (openGhActions.Key != ConsoleKey.Y)
                     return;
 
-                Helper.OpenWebsite(ReleaseActionUrl);
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write($"\n\nOpened URL: ");
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine(ReleaseActionUrl);
+                MonitorReleaseAction(nextVersionStr, client);
             }
             catch (Exception ex)
             {
@@ -144,6 +142,126 @@ namespace StreamDeckDeployer
             {
                 throw new Exception($"Unable to derive next version! {ex.Message}", ex);
             }
+        }
+
+        public static void MonitorReleaseAction(string releaseToMonitor, GitHubClient? client = null)
+        {
+            if (client == null)
+            {
+                DotNetEnv.Env.TraversePath().Load();
+                client = GetClient(DotNetEnv.Env.GetString(EnvKeyGitHubPat));
+            }
+            
+            Console.WriteLine($"Searching for GitHub Release Run {releaseToMonitor}...");
+            var restartPos = new Point(Console.CursorLeft, Console.CursorTop);
+            Console.Write("Waiting");
+            var waitingDotsPos = new Point(Console.CursorLeft, Console.CursorTop);
+            var waitCtr = 0;
+
+            var sw = Stopwatch.StartNew();
+            WorkflowRun thisRun = null;
+            while (sw.Elapsed.TotalSeconds < 180)
+            {
+                var w = client.Actions.Workflows.Runs.ListByWorkflow(GitRepoOwner, GitRepoName, "build-and-release.yml").Result;
+                if (w == null) continue;
+                thisRun = w.WorkflowRuns.FirstOrDefault(r => r.HeadBranch.Equals(releaseToMonitor));
+                if (thisRun == null)
+                {
+                    Thread.Sleep(1000);
+                    RenderWaiting(waitingDotsPos, waitCtr++);
+                    continue;
+                }
+
+                Console.SetCursorPosition(restartPos.X, restartPos.Y);
+                break;
+            }
+
+            if (thisRun == null)
+            {
+                throw new Exception($"Unable to find the workflow run for release {releaseToMonitor}");
+            }
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"Monitoring Release Workflow Run for {releaseToMonitor} (created: {thisRun.CreatedAt})...");
+            Console.ResetColor();
+
+            restartPos = new Point(Console.CursorLeft, Console.CursorTop);
+            
+            WorkflowRunStatus? lastRunStatus = null;
+            while (thisRun.Status.Value != WorkflowRunStatus.Completed)
+            {
+                if (lastRunStatus == thisRun.Status.Value)
+                {
+                    RenderWaiting(waitingDotsPos, waitCtr++);
+                    Thread.Sleep(5000);
+                    thisRun = client.Actions.Workflows.Runs.Get(GitRepoOwner, GitRepoName, thisRun.Id).Result;
+                    continue;
+                }
+
+                lastRunStatus = thisRun.Status.Value;
+
+                Console.SetCursorPosition(restartPos.X, restartPos.Y);
+                Console.Write($"Release workflow status update => {thisRun.Status.StringValue}...");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(thisRun.Status.StringValue);
+                Console.ResetColor();
+                waitCtr = 0;
+                restartPos = new Point(Console.CursorLeft, Console.CursorTop);
+                Console.Write("Checking");
+                waitingDotsPos = new Point(Console.CursorLeft, Console.CursorTop);
+            }
+
+            Console.SetCursorPosition(restartPos.X, restartPos.Y);
+            Console.ForegroundColor = GetConclusionColor(thisRun);
+            Console.WriteLine($"Release workflow is completed with status: {thisRun.Conclusion}");
+            Console.ResetColor();
+            Console.Write($"\nOpen the run on GitHub [y/n]?: ");
+
+            var openGhActions = Console.ReadKey();
+
+            if (openGhActions.Key is ConsoleKey.Y)
+            {
+                Helper.OpenWebsite(thisRun.HtmlUrl);
+            }
+        }
+
+        private const int WaitingDots = 5;
+        private static void RenderWaiting(Point waitingPos, int waitCount)
+        {
+            var numDots = (waitCount % WaitingDots) + 1;
+            Console.SetCursorPosition(waitingPos.X, waitingPos.Y);
+            Console.Write("".PadRight(WaitingDots, ' '));
+            Console.SetCursorPosition(waitingPos.X, waitingPos.Y);
+            Console.Write("".PadRight(numDots, '.'));
+        }
+
+        private static ConsoleColor GetConclusionColor(WorkflowRun run)
+        {
+            if (!run.Conclusion.HasValue)
+                throw new Exception("Not concluded!");
+
+            if (run.Conclusion == WorkflowRunConclusion.ActionRequired ||
+                run.Conclusion == WorkflowRunConclusion.Cancelled ||
+                run.Conclusion == WorkflowRunConclusion.Stale ||
+                run.Conclusion == WorkflowRunConclusion.Neutral)
+            {
+                return ConsoleColor.Yellow;
+            }
+
+            if (run.Conclusion == WorkflowRunConclusion.Failure ||
+                run.Conclusion == WorkflowRunConclusion.StartupFailure ||
+                run.Conclusion == WorkflowRunConclusion.Skipped ||
+                run.Conclusion == WorkflowRunConclusion.TimedOut)
+            {
+                return ConsoleColor.Red;
+            }
+
+            if (run.Conclusion == WorkflowRunConclusion.Success)
+            {
+                return ConsoleColor.Green;
+            }
+
+            return ConsoleColor.White;
         }
     }
 }
