@@ -1,5 +1,4 @@
 ﻿using BarRaider.SdTools;
-using SignalRgbDeckPlugin.Actions.Layouts;
 
 namespace SignalRgbDeckPlugin
 {
@@ -14,7 +13,8 @@ namespace SignalRgbDeckPlugin
             //    PluginAction.EffectFromEffectDirectory(
             //        new DirectoryInfo(Path.Combine(rootDi.FullName, @"-M6kJJl-tlZKQLjDg2ng")));
 
-            //var allEffectsTest = new List<InstalledEffectDetail>();
+            //EffectsHelper.RefreshEffectsDatabase();
+            //var allEffectsTest = EffectsHelper.Effects;
 
             //allEffectsTest.AddRange(rootDi.GetDirectories("*", SearchOption.TopDirectoryOnly).Where(PluginAction.EffectsDirectoryHasEffect).Select(PluginAction.EffectFromEffectDirectory));
 

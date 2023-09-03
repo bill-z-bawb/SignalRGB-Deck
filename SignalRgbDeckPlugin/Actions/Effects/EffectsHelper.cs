@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Security.Cryptography;
 using BarRaider.SdTools;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -11,9 +14,27 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         internal static Dictionary<string, InstalledEffectDetail> EffectsDatabase = new Dictionary<string, InstalledEffectDetail>();
         internal static List<InstalledEffectDetail> Effects => EffectsDatabase.Select(kv => kv.Value).ToList();
         internal static List<InstalledEffect> EffectSummaries => Effects.Select(e => e.ToInstalledEffect()).ToList();
-        internal static string EffectsPath = string.Empty;
+        internal static string CachedEffectsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            @"WhirlwindFX\SignalRgb\cache\effects");
+        internal static string InstalledEffectsPathRoot => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            @"VortxEngine");
+        internal static string InstalledEffectsPathTemplate => Path.Combine(InstalledEffectsPathRoot, 
+            @"{0}\Signal-x64\Effects");
 
-        private const string EffectHtmlFileName = "effect.html";
+        internal static List<string> InstalledAppVersions
+        {
+            get
+            {
+                var di = new DirectoryInfo(InstalledEffectsPathRoot);
+                return !di.Exists
+                    ? new List<string>()
+                    : di.GetDirectories("app-*", SearchOption.TopDirectoryOnly)
+                        .OrderByDescending(f => f.CreationTime)
+                        .Select(d =>d.Name)
+                        .ToList();
+            }
+        }
+        
         internal static readonly string[] KnownEffectAttributesList = new[]
         {
             "property",
@@ -25,11 +46,10 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             "default",
         };
 
-        private static readonly List<IEffectParser> EffectParsers = new List<IEffectParser>()
-        {
-            new HtmlEffectParser(),   // primary parser
-            new RegexEffectParser(),  // fallback parser for super sloppy HTML
-        };
+        internal static DirectoryInfo GetInstalledEffectsPathForAppVersion(DirectoryInfo appVer) =>
+            GetInstalledEffectsPathForAppVersion(appVer.FullName);
+        internal static DirectoryInfo GetInstalledEffectsPathForAppVersion(string appVer) =>
+            new DirectoryInfo(string.Format(InstalledEffectsPathTemplate, appVer));
 
         internal static InstalledEffectDetail EffectLookup(string forEffectId)
         {
@@ -43,60 +63,106 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         internal static void RefreshEffectsDatabase()
         {
-            EffectsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                @"WhirlwindFX\SignalRgb\cache\effects");
-            Logger.Instance.LogMessage(TracingLevel.INFO, $"Made effects path => {EffectsPath}");
-            var di = new DirectoryInfo(EffectsPath);
-
-            if (!di.Exists)
-                return;
-
-            var effectDetailsList = new List<InstalledEffectDetail>();
-            foreach (var effectFolder in di.GetDirectories("*", SearchOption.TopDirectoryOnly))
-            {
-                try
-                {
-                    if (!EffectsDirectoryHasEffect(effectFolder))
-                        continue;
-
-                    effectDetailsList.Add(EffectFromEffectDirectory(effectFolder));
-                }
-                catch (Exception ex)
-                {
-                    Logger.Instance.LogMessage(TracingLevel.WARN, $"Failed to parse effect \"{effectFolder.Name}\"! {ex.Message}");
-                }
-            }
-            effectDetailsList = effectDetailsList.OrderBy(e => e.Name).ToList();
-
             // build global effect db
             EffectsDatabase = new Dictionary<string, InstalledEffectDetail>();
-            effectDetailsList.ForEach(d => EffectsDatabase.Add(d.Id, d));
-        }
 
-        internal static bool EffectsDirectoryHasEffect(DirectoryInfo effectFolder)
+            // Since the same effect can appear as both cached and installed I guess prioritize cached...
+            var allEffects = GetCachedEffects();
+
+            var installedEffects = GetInstalledEffects();
+            var newInstalledEffects = installedEffects.Where(e => allEffects.All(a => !a.Name.Equals(e.Name))).ToList();
+            allEffects.AddRange(newInstalledEffects);
+
+            allEffects = allEffects.OrderBy(e => e.Name).ToList();
+
+            allEffects.ForEach(d => EffectsDatabase.Add(d.Id, d));
+       }
+
+        internal static List<InstalledEffectDetail> GetCachedEffects()
         {
-            return effectFolder.GetFiles("*", SearchOption.TopDirectoryOnly)
-                .Any(f => f.Name.Equals(EffectHtmlFileName, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        internal static InstalledEffectDetail EffectFromEffectDirectory(DirectoryInfo effectFolder)
-        {
-            var effectDoc = new FileInfo(Path.Combine(effectFolder.FullName, EffectHtmlFileName));
-            if (!effectDoc.Exists)
-                return null;
-
-            var effectHtmlContent = File.ReadAllText(effectDoc.FullName);
-
-            foreach (var propParser in EffectParsers)
+            try
             {
-                if (!propParser.TryParse(effectHtmlContent, effectFolder.Name, out var parsedEffect))
-                    continue;
+                Logger.Instance.LogMessage(TracingLevel.INFO, $"Made effects path => {CachedEffectsPath}");
+                var di = new DirectoryInfo(CachedEffectsPath);
 
-                // success
-                return parsedEffect;
+                if (!di.Exists)
+                    return new List<InstalledEffectDetail>();
+
+                var effectDetailsList = new List<InstalledEffectDetail>();
+                foreach (var effectFolder in di.GetDirectories("*", SearchOption.TopDirectoryOnly))
+                {
+                    try
+                    {
+                        if (!InstalledEffectDetail.EffectsCacheDirectoryHasEffect(effectFolder))
+                            continue;
+
+                        effectDetailsList.Add(InstalledEffectDetail.EffectFromCacheDirectory(effectFolder));
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.WARN, $"Failed to parse effect \"{effectFolder.Name}\"! {ex.Message}");
+                    }
+                }
+
+                return effectDetailsList;
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"Failed to fetch cached effects! {ex.Message}");
             }
 
-            throw new Exception($"Failed to parse effect in folder \"{effectFolder.FullName}\"!");
+            return new List<InstalledEffectDetail>();
+        }
+
+        internal static List<InstalledEffectDetail> GetInstalledEffects()
+        {
+            try
+            {
+                var installedEffects = new List<InstalledEffectDetail>();
+                // App folders in desc order (time created). For duplicate effects, fcfs
+                foreach (var appVersion in InstalledAppVersions)
+                {
+                    var appEffectsFiles = GetInstalledEffectsPathForAppVersion(appVersion).GetFiles("*.html", SearchOption.AllDirectories);
+                    foreach (var effectFile in appEffectsFiles)
+                    {
+                        var effect = InstalledEffectDetail.EffectFromHtml(effectFile);
+                        if (installedEffects.Any(i => i.Name.Equals(effect.Name)))
+                            continue;
+                            
+                        installedEffects.Add(effect);
+                    }
+                }
+                
+                return installedEffects;
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"Failed to fetch installed effects! {ex.Message}");
+            }
+
+            return new List<InstalledEffectDetail>();
+        }
+
+        public static string HashCode(this FileInfo fi, HashAlgorithm cryptoService)
+        {
+            return HashCode(fi.FullName, cryptoService);
+        }
+
+        internal static string HashCode(string filePath, HashAlgorithm cryptoService)
+        {
+            // can be either MD5, SHA1, SHA256, SHA384 or SHA512
+            using (cryptoService)
+            {
+                using (var fileStream = new FileStream(filePath,
+                           FileMode.Open,
+                           FileAccess.Read,
+                           FileShare.ReadWrite))
+                {
+                    var hash = cryptoService.ComputeHash(fileStream);
+                    var hashString = Convert.ToBase64String(hash);
+                    return hashString.TrimEnd('=');
+                }
+            }
         }
     }
 }
