@@ -124,9 +124,35 @@ namespace SignalRgbDeckPlugin.Actions.Effects.Tests
         }
 
         [Fact]
-        public void throws_on_empty_cached_folder()
+        public void throws_on_empty_cache_folder()
         {
             Assert.Throws<FileNotFoundException>(() => InstalledEffectDetail.EffectFromCacheDirectory(EffectsTestsHelper.CachedEffectsFolder));
+        }
+
+        [Fact]
+        public void identifies_empty_cache_folder()
+        {
+            Assert.False(InstalledEffectDetail.EffectsCacheDirectoryHasEffect(EffectsTestsHelper.CachedEffectsFolder));
+        }
+
+        [Fact]
+        public void identifies_cache_folder_has_effect()
+        {
+            var effectFolder = EffectsTestsHelper.CachedEffectsFolders.First(f => f.Name.Equals("-M6IRGbcnL4HQaVooCgs"));
+            Assert.True(InstalledEffectDetail.EffectsCacheDirectoryHasEffect(effectFolder));
+        }
+
+        [Fact]
+        public void effect_details_can_cast_to_effect()
+        {
+            var effectFile = EffectsTestsHelper.InstalledEffectsFiles.First(f => f.Name.Equals("Side To Side.html"));
+            var parsed = InstalledEffectDetail.EffectFromHtml(effectFile);
+            var cast = parsed.ToInstalledEffect();
+
+            Assert.NotNull(cast);
+            Assert.Equal("Side to Side", cast.Name);
+            Assert.NotNull(cast.Id);
+            Assert.NotEqual(string.Empty, cast.Id);
         }
     }
 }
