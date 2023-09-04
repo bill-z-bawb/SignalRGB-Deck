@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
 {
-    internal class EffectProperty
+    public class EffectProperty
     {
         [JsonProperty(PropertyName = "property")]
         public string PropertyName { get; set; }

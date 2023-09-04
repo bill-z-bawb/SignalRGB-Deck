@@ -2,12 +2,12 @@
 using System.IO;
 using System.Linq;
 
-namespace SignalRgbDeckPlugin.Tests
+namespace SignalRgbDeckPlugin.Actions.Effects.Tests
 {
-    internal static class TestsHelper
+    internal static class EffectsTestsHelper
     {
         public static string TestResourcesPath =>
-            Path.Combine(ProjectSourcePath.ProjectPath, @"Tests\TestResources");
+            Path.Combine(ProjectSourcePath.ProjectPath, @"Actions\Effects\Tests\TestResources\");
         public static DirectoryInfo TestResourcesFolder =>
             new DirectoryInfo(TestResourcesPath);
 

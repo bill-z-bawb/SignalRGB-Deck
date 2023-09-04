@@ -1,11 +1,12 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.IO;
+using System.Runtime.CompilerServices;
 
 internal static class ProjectSourcePath
 {
     private const string RelativePath = nameof(ProjectSourcePath) + ".cs";
-    private static string? _lazyValue;
+    private static string _lazyValue;
     public static string Value => _lazyValue ?? CalculatePath();
-    public static string? ProjectPath => string.IsNullOrWhiteSpace(Value) ? null : Path.GetFullPath(Path.Combine(Value, "..\\"));
+    public static string ProjectPath => string.IsNullOrWhiteSpace(Value) ? null : Path.GetFullPath(Path.Combine(Value, "..\\"));
 
     private static string CalculatePath()
     {

@@ -2,7 +2,7 @@
 
 namespace SignalRgbDeckPlugin.Actions.Effects
 {
-    internal class InstalledEffect
+    public class InstalledEffect
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; private set; }

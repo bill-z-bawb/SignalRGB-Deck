@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
 {
-    internal class InstalledEffectDetail : InstalledEffect
+    public class InstalledEffectDetail : InstalledEffect
     {
         [JsonProperty(PropertyName = "properties")]
         public List<EffectProperty> Properties { get; private set; } = new List<EffectProperty>();
