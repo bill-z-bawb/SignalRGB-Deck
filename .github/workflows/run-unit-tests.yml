@@ -20,8 +20,8 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore Bill-Z-Bawb-StreamDeck-Plugins.sln
  
-    - name: Build and Publish Plugin
-      run: msbuild SignalRgbDeckPlugin\SignalRgbDeckPlugin.csproj /p:Configuration=Publish
+    - name: Build Plugin
+      run: msbuild SignalRgbDeckPlugin\SignalRgbDeckPlugin.csproj /p:Configuration=Debug
     
     - name: Run xUnit Tests
       run: dotnet test SignalRgbDeckPlugin\SignalRgbDeckPlugin.csproj
