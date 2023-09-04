@@ -1,7 +1,5 @@
 # SignalRGB-Deck Plugin (for StreamDeck)
 
-[![Unit Tests](https://github.com/bill-z-bawb/SignalRGB-Deck/actions/workflows/run-unit-tests.yml/badge.svg?branch=master)](https://github.com/bill-z-bawb/SignalRGB-Deck/actions/workflows/run-unit-tests.yml)
-
 ## Description
 
 SignalRGB-Deck is not an official plugin. I am not associated with SignalRGB or Whirlwind in any manner (except being a huge fan).
