@@ -1,0 +1,46 @@
+<head>
+  <title>Solid Color</title>
+  <meta description="Solid selectable color with breathing option."/>
+  <meta publisher="SignalRGB" />
+
+  <meta property="color" label="Color" type="color" min="0" max="360" default="#00BBff" />
+  <meta property="breathe" label="Breathing" type="boolean" default="0" />
+  <meta property="speed" label="Speed" type="number" min="1" max="5" default="3" />
+</head>
+
+<body style="margin: 0; padding: 0;">
+  <canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+
+<script>
+  var c = document.getElementById("exCanvas");
+  var ctx = c.getContext("2d");  
+  var width = 320;
+  var height = 200;
+  var hue = 1; 
+  var prevColor;
+  var phase = 0;
+
+  function update() 
+  {
+    if (color != prevColor || breathe === 1){
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, width, height);
+      prevColor = color;
+
+      if (breathe > 0){
+        var transparency = (0.5 * Math.sin(phase)) + .5;
+        ctx.fillStyle = "hsla(0,0%,0%,"+transparency+")";
+        ctx.fillRect(0, 0, width, height);
+
+        phase += (speed / 10) * .1;
+        if (phase > 6.282) phase = 0;
+        prevColor = ctx.fillStyle;
+      }
+    }
+
+    window.requestAnimationFrame(update);
+  }
+
+  window.requestAnimationFrame(update);
+</script>

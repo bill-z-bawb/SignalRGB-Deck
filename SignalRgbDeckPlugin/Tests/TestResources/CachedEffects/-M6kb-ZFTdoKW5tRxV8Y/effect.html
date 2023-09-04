@@ -1,0 +1,477 @@
+<head>
+  <title>Aurora</title>
+  <meta
+    description="Smooth blue, green, and purple effect designed to look like the Northern Lights."
+  />
+  <meta publisher="SignalRGB" />
+  <meta
+    property="speedRaw"
+    label="Speed"
+    type="number"
+    min="0"
+    max="100"
+    default="10"
+  />
+  <meta
+    property="dynamicBg"
+    label="Dynamic background"
+    type="boolean"
+    min="0"
+    max="1"
+    default="1"
+  />
+</head>
+
+<body style="margin: 0; padding: 0">
+  <canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+<script>
+  !(function (t) {
+    var o = (t.noise = {});
+    function r(t, o, r) {
+      (this.x = t), (this.y = o), (this.z = r);
+    }
+    (r.prototype.dot2 = function (t, o) {
+      return this.x * t + this.y * o;
+    }),
+      (r.prototype.dot3 = function (t, o, r) {
+        return this.x * t + this.y * o + this.z * r;
+      });
+    var n = [
+        new r(1, 1, 0),
+        new r(-1, 1, 0),
+        new r(1, -1, 0),
+        new r(-1, -1, 0),
+        new r(1, 0, 1),
+        new r(-1, 0, 1),
+        new r(1, 0, -1),
+        new r(-1, 0, -1),
+        new r(0, 1, 1),
+        new r(0, -1, 1),
+        new r(0, 1, -1),
+        new r(0, -1, -1),
+      ],
+      e = [
+        151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,
+        140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247,
+        120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32, 57,
+        177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175, 74,
+        165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122,
+        60, 211, 133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54,
+        65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208, 89, 18, 169,
+        200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3,
+        64, 52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118, 126, 255, 82, 85,
+        212, 207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170,
+        213, 119, 248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43,
+        172, 9, 129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232, 178, 185,
+        112, 104, 218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191,
+        179, 162, 241, 81, 51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31,
+        181, 199, 106, 157, 184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150,
+        254, 138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195,
+        78, 66, 215, 61, 156, 180,
+      ],
+      a = new Array(512),
+      i = new Array(512);
+    (o.seed = function (t) {
+      t > 0 && t < 1 && (t *= 65536),
+        (t = Math.floor(t)) < 256 && (t |= t << 8);
+      for (var o = 0; o < 256; o++) {
+        var r;
+        (r = 1 & o ? e[o] ^ (255 & t) : e[o] ^ ((t >> 8) & 255)),
+          (a[o] = a[o + 256] = r),
+          (i[o] = i[o + 256] = n[r % 12]);
+      }
+    }),
+      o.seed(0);
+    var d = 0.5 * (Math.sqrt(3) - 1),
+      f = (3 - Math.sqrt(3)) / 6,
+      h = 1 / 6;
+    function u(t) {
+      return t * t * t * (t * (6 * t - 15) + 10);
+    }
+    function s(t, o, r) {
+      return (1 - r) * t + r * o;
+    }
+    (o.simplex2 = function (t, o) {
+      var r,
+        n,
+        e = (t + o) * d,
+        h = Math.floor(t + e),
+        u = Math.floor(o + e),
+        s = (h + u) * f,
+        l = t - h + s,
+        w = o - u + s;
+      l > w ? ((r = 1), (n = 0)) : ((r = 0), (n = 1));
+      var v = l - r + f,
+        M = w - n + f,
+        c = l - 1 + 2 * f,
+        p = w - 1 + 2 * f,
+        y = i[(h &= 255) + a[(u &= 255)]],
+        x = i[h + r + a[u + n]],
+        m = i[h + 1 + a[u + 1]],
+        q = 0.5 - l * l - w * w,
+        z = 0.5 - v * v - M * M,
+        A = 0.5 - c * c - p * p;
+      return (
+        70 *
+        ((q < 0 ? 0 : (q *= q) * q * y.dot2(l, w)) +
+          (z < 0 ? 0 : (z *= z) * z * x.dot2(v, M)) +
+          (A < 0 ? 0 : (A *= A) * A * m.dot2(c, p)))
+      );
+    }),
+      (o.simplex3 = function (t, o, r) {
+        var n,
+          e,
+          d,
+          f,
+          u,
+          s,
+          l = (t + o + r) * (1 / 3),
+          w = Math.floor(t + l),
+          v = Math.floor(o + l),
+          M = Math.floor(r + l),
+          c = (w + v + M) * h,
+          p = t - w + c,
+          y = o - v + c,
+          x = r - M + c;
+        p >= y
+          ? y >= x
+            ? ((n = 1), (e = 0), (d = 0), (f = 1), (u = 1), (s = 0))
+            : p >= x
+            ? ((n = 1), (e = 0), (d = 0), (f = 1), (u = 0), (s = 1))
+            : ((n = 0), (e = 0), (d = 1), (f = 1), (u = 0), (s = 1))
+          : y < x
+          ? ((n = 0), (e = 0), (d = 1), (f = 0), (u = 1), (s = 1))
+          : p < x
+          ? ((n = 0), (e = 1), (d = 0), (f = 0), (u = 1), (s = 1))
+          : ((n = 0), (e = 1), (d = 0), (f = 1), (u = 1), (s = 0));
+        var m = p - n + h,
+          q = y - e + h,
+          z = x - d + h,
+          A = p - f + 2 * h,
+          b = y - u + 2 * h,
+          g = x - s + 2 * h,
+          j = p - 1 + 0.5,
+          k = y - 1 + 0.5,
+          B = x - 1 + 0.5,
+          C = i[(w &= 255) + a[(v &= 255) + a[(M &= 255)]]],
+          D = i[w + n + a[v + e + a[M + d]]],
+          E = i[w + f + a[v + u + a[M + s]]],
+          F = i[w + 1 + a[v + 1 + a[M + 1]]],
+          G = 0.6 - p * p - y * y - x * x,
+          H = 0.6 - m * m - q * q - z * z,
+          I = 0.6 - A * A - b * b - g * g,
+          J = 0.6 - j * j - k * k - B * B;
+        return (
+          32 *
+          ((G < 0 ? 0 : (G *= G) * G * C.dot3(p, y, x)) +
+            (H < 0 ? 0 : (H *= H) * H * D.dot3(m, q, z)) +
+            (I < 0 ? 0 : (I *= I) * I * E.dot3(A, b, g)) +
+            (J < 0 ? 0 : (J *= J) * J * F.dot3(j, k, B)))
+        );
+      }),
+      (o.perlin2 = function (t, o) {
+        var r = Math.floor(t),
+          n = Math.floor(o);
+        (t -= r), (o -= n);
+        var e = i[(r &= 255) + a[(n &= 255)]].dot2(t, o),
+          d = i[r + a[n + 1]].dot2(t, o - 1),
+          f = i[r + 1 + a[n]].dot2(t - 1, o),
+          h = i[r + 1 + a[n + 1]].dot2(t - 1, o - 1),
+          l = u(t);
+        return s(s(e, f, l), s(d, h, l), u(o));
+      }),
+      (o.perlin3 = function (t, o, r) {
+        var n = Math.floor(t),
+          e = Math.floor(o),
+          d = Math.floor(r);
+        (t -= n), (o -= e), (r -= d);
+        var f = i[(n &= 255) + a[(e &= 255) + a[(d &= 255)]]].dot3(t, o, r),
+          h = i[n + a[e + a[d + 1]]].dot3(t, o, r - 1),
+          l = i[n + a[e + 1 + a[d]]].dot3(t, o - 1, r),
+          w = i[n + a[e + 1 + a[d + 1]]].dot3(t, o - 1, r - 1),
+          v = i[n + 1 + a[e + a[d]]].dot3(t - 1, o, r),
+          M = i[n + 1 + a[e + a[d + 1]]].dot3(t - 1, o, r - 1),
+          c = i[n + 1 + a[e + 1 + a[d]]].dot3(t - 1, o - 1, r),
+          p = i[n + 1 + a[e + 1 + a[d + 1]]].dot3(t - 1, o - 1, r - 1),
+          y = u(t),
+          x = u(o),
+          m = u(r);
+        return s(s(s(f, v, y), s(h, M, y), m), s(s(l, c, y), s(w, p, y), m), x);
+      });
+  })(this);
+</script>
+<script>
+  var canvas = document.getElementById("exCanvas");
+  var ctx = canvas.getContext("2d");
+  w = ctx.canvas.width;
+  h = ctx.canvas.height;
+  ctx.filter = "blur(50px)";
+
+  fgHue = 200;
+  speedRaw = 5;
+  bgColor = "#000000";
+
+  nt = 0;
+  noiseSpeed = 0.005;
+  lineCount = 30;
+  lineWidth = 5;
+  gap = 5;
+  xScale = 320;
+  yScale = 10;
+
+  var bgTime = 0;
+  var dynamicBg = false;
+
+  var dots = [{}];
+  var mx = 0;
+  var my = 0;
+  var md = 100;
+  var maxWidth = 15;
+  var minWidth = 2;
+  var maxHeight = h * 0.9;
+  var minHeight = h * 0.5;
+  var maxSpeed = 35;
+  var reverse = false;
+  var minSpeed = 6;
+  var speed = 25;
+  var hue = 210;
+  hueDif = 80; // Hue +/-
+  var hueRb = 0;
+  bgColor = "#000000";
+  rainbowMode = false;
+  glow = 10; // Set to 0 for better performance
+  ctx.globalCompositeOperation = "lighter";
+
+  const bg3 = "M0,.45A290.76,290.76,0,0,0,72.22,36.22c45,14.89,101.75,21.24,105.1,11,2.1-6.45-16.38-20.89-35.33-25.94-15.9-4.23-23,.57-40-1.56C90.77,18.27,75.08,13.86,57,0";
+  const bg3Path = new Path2D(bg3);
+
+  const bg4 = "M4.4,19.32c2-13.34,79.66-37.72,117,3.92,29.51,32.89,21.55,93.56-1.79,104.42-15,7-25.69-14.15-74.68-24.82C15.33,96.39.68,87.69,0,78.58c-.87-12,25.76-17.9,25.68-33C25.63,31.79,3.28,26.79,4.4,19.32Z";
+  const bg4Path = new Path2D(bg4);
+
+  const bg5 = "M1.69,2.61c-12.19,27.87,43.91,95,91.9,94.09C121,96.19,146,73.47,155.75,83.06c7,6.85-3.74,20.5,2.46,37.56,4.93,13.56,17.8,21.72,40.48,31.08,22.19,9.17,56.83,20.74,103.75,26.16,17.09-52.92,16.09-96.34-8-106.42C262.2,58,264.29,56,237.66,53.38c-8.51-.83-41.66-4.05-72.5-2.56-31.1,1.5-26.62,28.25-38.47,24.86C82.45,63,36.62,14.54,36.35,7.7,36.07.51,7.35-1.75,2.71,1.36A3,3,0,0,0,1.69,2.61Z";
+  const bg5Path = new Path2D(bg5);
+
+  const bg6 = "M1,3.54C4.15-1.85,7.86,3.31,17.26.85,21.75-.32,7,1.83,29.5,0c1.47-.12,3,1.6,3.18,1.79,47.12,47,84.57,47.31,84.57,47.31,16.12,2.27,30.08-5.23,26.37-.94C112,84.64,105.87,81.23,72.26,73.43,27.54,63-6.37,16.19,1,3.54Z";
+  const bg6Path = new Path2D(bg6);
+
+  const bg7 =
+    "M0,55.23C29.67,93,54.1,101.44,71.55,101.52s25.34-8.33,41.82-3.58c20.14,5.8,23.75,22.76,45.39,43.15,20.74,19.55,42.52,27.63,55.45,32.43,56.17,20.82,109,4.5,108.9,2.9-.09-1.4-41,10-87.21-8.49-35.46-14.2-59-39.13-59-39.13-17.66-18.69-16.22-26.94-30-34.66-24.29-13.65-45.65,2.68-70.21-.9C55.68,90.18,27.51,71.85,0,0";
+  const bg7Path = new Path2D(bg7);
+
+  const bg8 =
+    "M0,54.78a454.81,454.81,0,0,0,144.7,57c88.46,18,156.08,3.25,156.07,0,0-4.55-132.22,8.83-163-48.23-5.51-10.22-8-23.06-21-30.18-21.61-11.8-39.45,10-65.07-2.24C40.85,25.91,38.26,19.26,16.12,7.6,9.45,4.09,3.76,1.57,0,0";
+  const bg8Path = new Path2D(bg8);
+
+  const bg9 =
+    "M4.23,0c-3.67.83-7.32,17,0,26.84C11,36,20.8,31.42,38.24,42.52c10,6.39,8.69,9.11,16.77,13.34,16.82,8.79,61.48,17.71,58.14,12.55C83.18,22.16,71.94,29.58,44.72,26c-8-1.06-15.19-.66-23.25-6C9.53,12,7.62-.73,4.23,0Z";
+  const bg9Path = new Path2D(bg9);
+
+  function draw() {
+    if (dynamicBg) {
+      if (bgTime < 385) {
+        bgTime += speedRaw / 100;
+      } else {
+        bgTime = 0;
+      }
+      let grd = ctx.createLinearGradient(-320 + bgTime, 0, bgTime + 320, 0);
+      grd.addColorStop(0, "#5700a3");
+      grd.addColorStop(0.1, "#7a0072");
+      grd.addColorStop(0.2, "#004f18");
+      grd.addColorStop(0.3, "#003e6b");
+      grd.addColorStop(0.4, "#00085c");
+      grd.addColorStop(0.5, "#5700a3");
+      grd.addColorStop(0.6, "#5700a3");
+      grd.addColorStop(0.7, "#7a0072");
+      grd.addColorStop(0.8, "#004f18");
+      grd.addColorStop(0.9, "#003e6b");
+      grd.addColorStop(1, "#00085c");
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, 320, 200);
+    } else {
+      ctx.fillStyle = "#190b32";
+      ctx.fillRect(0, 0, 320, 200);
+
+      ctx.translate(150, 0);
+      ctx.fillStyle = "#1a0028";
+      ctx.fill(bg3Path);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+      ctx.translate(20, -10);
+      ctx.fillStyle = "#5c2a92";
+      ctx.fill(bg5Path);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+      ctx.fillStyle = "#2d0029";
+      ctx.scale(0.8,0.8)
+      ctx.translate(300, 80);
+      ctx.fill(bg4Path);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.translate(40, -20);
+      ctx.fill(bg6Path);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+
+
+      ctx.fillStyle = "#0a996b";
+      ctx.fill(bg7Path);
+
+      ctx.translate(0, 75);
+      ctx.fillStyle = "#1a5766";
+      ctx.fill(bg8Path);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+      ctx.translate(0, 130);
+      ctx.fillStyle = "#132443";
+      ctx.fill(bg9Path);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+
+    // nt += noiseSpeed;
+    // for (i = 0; i < lineCount; i++) {
+    //   ctx.beginPath();
+    //   ctx.lineWidth = lineWidth;
+    //   for (x = 0; x < w; x++) {
+    //     var y = noise.simplex3(x / xScale, 0, nt) * yScale;
+    //     if (i < 4) {
+    //       ctx.strokeStyle = "#ff00ee77";
+    //     } else if (i < 8 && i >= 4) {
+    //       ctx.strokeStyle = "#7600d177";
+    //     } else if (i < 12 && i >= 8) {
+    //       ctx.strokeStyle = "#1900ff77";
+    //     } else if (i < 16 && i >= 12) {
+    //       ctx.strokeStyle = "#00ff5977";
+    //     } else {
+    //       ctx.strokeStyle = "#0095ff77";
+    //     }
+    //     ctx.lineTo(x, i * (lineWidth + gap) + y * 10 * (i / 20));
+    //   }
+    //   ctx.stroke();
+    //   ctx.closePath();
+    // }
+
+    renderLines();
+  }
+
+  function clear() {
+    ctx.fillStyle = "rgba(0,0,0,0.01)";
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  function render() {
+    noiseSpeed = 0.001 * (speedRaw / 10);
+    speed = speedRaw;
+    clear();
+    draw();
+    requestAnimationFrame(render);
+  }
+  render();
+
+  function pushDots(num) {
+    for (i = 1; i < md; i++) {
+      dots.push({
+        x: Math.random() * w,
+        y: Math.random() * 10,
+        h: Math.random() * 100 + 150,
+        w: Math.random() * (maxWidth - minWidth) + minWidth,
+        cRnd: Math.random(),
+        c: Math.random() * (hue + hueDif - (hue - hueDif)) + (hue - hueDif),
+        cRb: Math.round(Math.random() * 360),
+        m: Math.random() * (maxSpeed - minSpeed) + minSpeed,
+        rand: Math.random() < 0.5,
+      });
+    }
+  }
+  pushDots();
+
+  function renderLines() {
+    if (hueRb < 360) {
+      hueRb++;
+    } else {
+      hueRb = 0;
+    }
+    //ctx.fillStyle = bgColor;
+    //ctx.fillRect(0, 0, 320, 200);
+    for (i = 1; i < dots.length; i++) {
+      if (rainbowMode) {
+        dots[i].c = dots[i].cRb;
+      } else {
+        dots[i].c =
+          dots[i].cRnd * (hue + hueDif - (hue - hueDif)) + (hue - hueDif);
+      }
+
+      ctx.beginPath();
+      grd = ctx.createLinearGradient(
+        dots[i].x,
+        dots[i].y,
+        dots[i].x + dots[i].w,
+        dots[i].y + dots[i].h
+      );
+      grd.addColorStop(0.0, "hsla(" + dots[i].c + ",80%,40%,.0)");
+      grd.addColorStop(0.2, "hsla(" + dots[i].c + 20 + ",85%,40%,.6)");
+      grd.addColorStop(0.5, "hsla(" + dots[i].c + 50 + ",95%,50%,.7)");
+      grd.addColorStop(0.8, "hsla(" + dots[i].c + 80 + ",85%,40%,.6)");
+      grd.addColorStop(1, "hsla(" + (dots[i].c + 100) + ",80%,40%,.0)");
+
+      grd2 = ctx.createLinearGradient(
+        dots[i].x,
+        dots[i].y,
+        dots[i].x + dots[i].w + 20,
+        dots[i].y + dots[i].h
+      );
+      grd2.addColorStop(0.0, "hsla(" + dots[i].c + ",75%,40%,.0)");
+      grd2.addColorStop(0.2, "hsla(" + dots[i].c + 20 + ",80%,40%,.05)");
+      grd2.addColorStop(0.5, "hsla(" + dots[i].c + 50 + ",90%,50%,.1)");
+      grd2.addColorStop(0.8, "hsla(" + dots[i].c + 80 + ",80%,40%,.05)");
+      grd2.addColorStop(1, "hsla(" + (dots[i].c + 100) + ",75%,40%,.0)");
+
+      grd3 = ctx.createLinearGradient(
+        dots[i].x,
+        dots[i].y,
+        dots[i].x + dots[i].w + 8,
+        dots[i].y + dots[i].h
+      );
+      grd3.addColorStop(0.0, "hsla(" + dots[i].c + ",75%,40%,.0)");
+      grd3.addColorStop(0.2, "hsla(" + dots[i].c + 20 + ",80%,40%,.2)");
+      grd3.addColorStop(0.5, "hsla(" + dots[i].c + 50 + ",85%,50%,.3)");
+      grd3.addColorStop(0.8, "hsla(" + dots[i].c + 80 + ",80%,40%,.2)");
+      grd3.addColorStop(1, "hsla(" + (dots[i].c + 100) + ",75%,40%,.0)");
+
+      ctx.shadowBlur = glow;
+      ctx.shadowColor = "hsla(" + dots[i].c + ",50%,50%,1)";
+      ctx.fillStyle = grd2;
+      ctx.fillRect(dots[i].x - 10, dots[i].y, dots[i].w + 20, dots[i].h);
+      ctx.fillStyle = grd3;
+      ctx.fillRect(dots[i].x - 4, dots[i].y, dots[i].w + 8, dots[i].h);
+      ctx.fillStyle = grd;
+      ctx.fillRect(dots[i].x, dots[i].y, dots[i].w, dots[i].h);
+      ctx.closePath();
+      if (dots[i].rand) {
+        dots[i].x -= (dots[i].m / 100) * (speed / 25);
+      } else {
+        dots[i].x += (dots[i].m / 100) * (speed / 25);
+      }
+      if (dots[i].x > 320 || dots[i].x < 0) {
+        var rand = Math.random() < 0.5;
+        var newX = 320;
+        if (rand) {
+          newX = 320;
+        } else {
+          newX = 0;
+        }
+        dots.splice(i, 1);
+        dots.push({
+          x: newX,
+          y: Math.random() * 100,
+          h: Math.random() * (maxHeight - minHeight) + minHeight,
+          w: Math.random() * (maxWidth - minWidth) + minWidth,
+          cRnd: Math.random(),
+          c: Math.random() * (hue + hueDif - (hue - hueDif)) + (hue - hueDif),
+          cRb: hueRb,
+          m: Math.random() * (maxSpeed - minSpeed) + minSpeed,
+          rand: rand,
+        });
+      }
+    }
+  }
+</script>

@@ -1,0 +1,62 @@
+<head>
+  <title>Rainbow</title>
+    
+  <meta description="Stock rainbow puke."/>
+  <meta publisher="WhirlwindFX" />
+  <meta property="speed" label="Rainbow Speed" type="number" min="1" max="10" default="3">
+  <meta property="vertical" label="Vertical" type="boolean" default="0">
+</head>
+
+<body style="margin: 0; padding: 0; background: black;">
+  <canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+
+<script>
+  console.clear();
+
+  // Get the canvas element from the DOM
+  var c = document.getElementById("exCanvas");
+  var ctx = c.getContext("2d");  
+  var width = 320;
+  var height = 200;
+  var hue = 1; 
+
+
+  function drawVertical()
+  {
+    for (var iIdx = 0; iIdx < height; iIdx++)
+    {
+      var lhue = iIdx * 1;
+      ctx.fillStyle = 'hsl('+ (lhue - hue) % 360 + ', 100%, 50%)';
+      ctx.fillRect(0, iIdx, width, 1);
+    }
+  }
+
+
+  function drawHorizontal()
+  {
+    for (var iIdx = 0; iIdx < width; iIdx++)
+      { 
+        ctx.fillStyle = 'hsl('+ (iIdx - hue) % 360 + ', 100%, 50%)';
+        ctx.fillRect(iIdx, 0, 1, height);
+      }
+  }
+
+  function drawOgRainbow()
+  {
+    if (vertical) { drawVertical(); }
+    else { drawHorizontal(); }
+    
+    hue+=speed;
+    if (hue > 360) { hue %= 360; }
+  }
+
+  function update() 
+  {
+    drawOgRainbow();
+    window.requestAnimationFrame(update);
+  }
+
+  window.requestAnimationFrame(update);
+
+</script>

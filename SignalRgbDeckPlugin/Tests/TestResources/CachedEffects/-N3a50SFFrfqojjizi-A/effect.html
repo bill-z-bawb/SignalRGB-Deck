@@ -1,0 +1,303 @@
+<head>
+  <title>Stranger Things</title>
+  <meta description="Experience the Upside Down in full RGB." />
+  <meta publisher="SignalRGB" />
+
+  <meta property="speed" label="Tentacle Speed" type="number" min="0" max="100" default="30"/>
+  <meta
+  property="tapEffect"
+  label="Tap Effect"
+  type="boolean"
+  default="0"
+  />
+  <meta property="mainColor" label="Main Color" type="color" default="#ff0000" min="0" max="360" />
+  <meta property="flipColor" label="Upside Down Color" type="color" default="#0000ff" min="0" max="360" />
+
+</head>
+<body style="margin: 0; padding: 0; background: #000;">
+<canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+<script>
+  var canvas = document.getElementById("exCanvas");
+  var c = canvas.getContext("2d");
+  
+  // 1000ms = 1s
+  // 60 ticks per second
+  setInterval(tick, 1000 / 60);
+  
+  var tapFlip = false;
+  var theFlip = false;
+  var colors = []
+  var tentacles1 = [
+      new Tentacle(Math.random() * 120, Math.random() * 2, Math.random(), {x: -20, y: 70}, {x: 160, y: 90}, 1),
+      new Tentacle(Math.random() * 120, Math.random(), Math.random(), {x: -20, y: 170}, {x: 160, y: 90}, 1)
+];
+var tentacles2 = [
+  new Tentacle(Math.random() * 120, Math.random() * 2, Math.random(), {x: 340, y: 70}, {x: 160, y: 90}, 0),
+  new Tentacle(Math.random() * 120, Math.random(), Math.random(), {x: 340, y: 170}, {x: 160, y: 90}, 0)
+];
+var sin, cos;
+var theFog = new fog();
+var tapCount = 0;
+
+function tick(){
+  if(tapEffect){
+      tapCount > 0 ? theFlip = true : theFlip = false;
+  }
+  tapCount > 100 ? tapCount = 100 : null;
+  tapCount > 0 ? tapCount-- : null;
+  var theMain = hexToHSL(mainColor)
+  var flipColorHSL = hexToHSL(flipColor)
+  if(!theFlip){
+      colors = [`hsl(${theMain[0]}, ${theMain[1]}%, ${theMain[2] - 5}%)`,
+          `hsl(${theMain[0]}, ${theMain[1]}%, ${theMain[2]}%)`, 
+          `hsl(${theMain[0]}, ${theMain[1] - 10}%, ${theMain[2] - 20}%)`
+      ]
+  } else {
+      colors = [`hsl(${flipColorHSL[0]}, ${flipColorHSL[1]}%, ${flipColorHSL[2] - 5}%)`,
+          `hsl(${flipColorHSL[0]}, ${flipColorHSL[1]}%, ${flipColorHSL[2]}%)`, 
+          `hsl(${flipColorHSL[0]}, ${flipColorHSL[1] - 10}%, ${flipColorHSL[2] - 20}%)`
+      ]
+  }
+  // Precompute trig values.
+  if(speed > 0){
+      sin = Math.sin(Date.now() / 100000 * speed);
+      cos = Math.cos(Date.now() / 100000 * speed);
+  }
+
+  if (theFlip){
+      c.save()
+      c.translate(160, 100)
+      c.rotate(Math.PI)
+      c.translate(-160, -100)
+  }
+
+  c.fillStyle = theFlip ? `hsl(${flipColorHSL[0]}, ${flipColorHSL[1] - 15}%, ${flipColorHSL[2] + 15}%)` : `hsl(${theMain[0]}, ${theMain[1] - 15}%, ${theMain[2] + 15}%)`;
+  c.fillRect(0, 0, canvas.width, canvas.height);
+
+  var mid = { x: canvas.width / 2,
+              y: canvas.height / 2 };
+      
+  DrawTriangle(145, 90, 180, 90, 130, 210, colors[0])
+
+  
+  for(i = 0; i < tentacles2.length; i++) {
+      tentacles2[i].update();
+  }
+  theFog.draw()
+  for(i = 0; i < tentacles1.length; i++) {
+      tentacles1[i].update();
+  }
+
+  DrawCircle(170, 100, 20, colors[1])
+  DrawTriangle(155, 100, 190, 100, 155, 45, colors[1])
+
+  drawGround()
+  drawSky()
+
+  if(theFlip){
+      c.restore()
+  }
+}
+
+function DrawTriangle(cord1X, cord1Y, cord2X, cord2Y, cord3X, cord3Y, color) {
+  c.beginPath();
+  c.fillStyle = color;
+  c.moveTo(cord1X, cord1Y);
+  c.lineTo(cord2X, cord2Y);
+  c.lineTo(cord3X, cord3Y);
+  c.lineTo(cord1X, cord1Y);
+  c.fill();
+};
+
+function DrawCircle(x, y, radius, color) {
+  c.beginPath();
+  c.fillStyle = color;
+  c.arc(x, y, radius, 0, 2 * Math.PI)
+  c.fill();
+};
+
+function DrawStroke(x, y, radius, color, stroke) {
+  c.beginPath();
+  c.strokeStyle = color;
+  c.lineWidth = stroke;
+  c.arc(x, y, radius, 0, 2 * Math.PI)
+  c.stroke();
+};
+
+function DrawRect(x, y, width, height, color) {
+  c.beginPath();
+  c.fillStyle = color;
+  c.fillRect(x, y, width, height);
+};
+
+function drawGround(){
+    DrawCircle(60, 190, 30, colors[2])
+    DrawCircle(250, 190, 45, colors[2])
+    DrawCircle(140, 225, 50, colors[2])
+    DrawCircle(0, 190, 60, colors[2])
+    DrawCircle(310, 190, 60, colors[2])
+    DrawRect(90, 140, 5, 60, colors[2])
+    DrawRect(180, 160, 5, 60, colors[2])
+}
+
+function drawSky(){
+    DrawCircle(60, -10, 30, colors[2])
+    DrawCircle(250, -10, 45, colors[2])
+    DrawCircle(140, -10, 40, colors[2])
+    DrawCircle(190, -10, 20, colors[2])
+    DrawCircle(100, -10, 20, colors[2])
+    DrawCircle(0, -10, 60, colors[2])
+    DrawCircle(310, -10, 60, colors[2])
+}
+
+function fog(){
+  this.effects = []
+  this.draw = function(){
+      if (this.effects.length < 150){
+          this.effects.push(new fogPart())
+      }
+      this.effects.forEach(ele=>{
+          ele.draw()
+      })
+  }
+}
+
+function fogPart(){
+    this.x = Math.random() * 320;
+    this.y = Math.random() * 200;
+    this.radius = Math.random() * 20 + 10;
+    this.draw = function(){
+        c.globalAlpha = .1;
+        DrawCircle(this.x, this.y, this.radius, "white")
+        this.x += Math.random() * 2 - 1;
+        this.y -= Math.random() * 2 - 1.25
+        this.x > 320 ? this.x = 320 : this.x < 0 ? this.x = 0 : null;
+        this.y > 220 ? this.y = -20 : null;
+        c.globalAlpha = 1;
+    }
+}
+
+function Tentacle(intensity, percent1, percent2, from, to, color) {
+  this.intensity = intensity;
+  this.percent1 = percent1;
+  this.percent2 = percent2;
+  this.from = from;
+  this.to = to;
+  this.int = color;
+  this.color = null;
+  this.update = function() {
+      this.color = colors[this.int];
+      // Make it change over time.
+      this.intensity += Math.random() - 0.5;
+      this.percent1 += Math.random() / 10 - 0.2;
+      this.percent2 += Math.random() / 10 - 0.2;
+      // Bound the percentages to [0, 1].
+      if(this.percent1 < 0) {
+          this.percent1 = 0;
+      } else if(this.percent1 > 1) {
+          this.percent1 = 1;
+      }
+      if(this.percent2 < 0) {
+          this.percent2 = 0;
+      } else if(this.percent2 > 1) {
+          this.percent2 = 1;
+      }
+      c.beginPath();
+      var tangent1 = getTangentPoint(this.from, this.to, this.intensity * sin, this.percent1);
+      var tangent2 = getTangentPoint(this.from, this.to, this.intensity * cos, this.percent2);
+      c.moveTo(this.from.x, this.from.y);
+      c.bezierCurveTo(tangent1.x, tangent1.y,
+                      tangent2.x, tangent2.y,
+                      this.to.x, this.to.y);
+      c.strokeStyle = this.color;
+      c.lineWidth = 15;
+      c.stroke();
+  }
+}
+
+function hexToHSL(H) {
+// Convert hex to RGB first
+let r = 0, g = 0, b = 0;
+if (H.length == 4) {
+  r = "0x" + H[1] + H[1];
+  g = "0x" + H[2] + H[2];
+  b = "0x" + H[3] + H[3];
+} else if (H.length == 7) {
+  r = "0x" + H[1] + H[2];
+  g = "0x" + H[3] + H[4];
+  b = "0x" + H[5] + H[6];
+}
+// Then to HSL
+r /= 255;
+g /= 255;
+b /= 255;
+let cmin = Math.min(r,g,b),
+    cmax = Math.max(r,g,b),
+    delta = cmax - cmin,
+    h = 0,
+    s = 0,
+    l = 0;
+
+if (delta == 0)
+  h = 0;
+else if (cmax == r)
+  h = ((g - b) / delta) % 6;
+else if (cmax == g)
+  h = (b - r) / delta + 2;
+else
+  h = (r - g) / delta + 4;
+
+h = Math.round(h * 60);
+
+if (h < 0)
+  h += 360;
+
+l = (cmax + cmin) / 2;
+s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+s = +(s * 100).toFixed(1);
+l = +(l * 100).toFixed(1);
+
+return [h, s, l];
+}
+
+function getTangentPoint(from, to, distance, percentage) {
+  var targetX = (to.x - from.x) * percentage + from.x; 
+  var targetY = (to.y - from.y) * percentage + from.y;
+  var tangent = getTangentVector(from, to, distance);
+  return { x: targetX + tangent.x, y: targetY - tangent.y };
+}
+
+function getTangentVector(from, to, length) {
+  var angle = getAngle(from, to);
+  var tangentAngle = angle - (Math.PI / 2);
+  var tanX = length * Math.cos(tangentAngle);
+  var tanY = length * Math.sin(tangentAngle);
+  return { x: tanX, y: tanY };
+}
+
+function getAngle(from, to) {
+  var vx = to.x - from.x;
+  var vy = -(to.y - from.y);
+  var angle = Math.atan(vy / vx);
+  if(vx < 0) {
+      angle = angle + Math.PI;
+  } else if(vy < 0) {
+      angle = angle + 2 * Math.PI;
+  }
+  return angle;
+}
+
+function toDegrees(angle) {
+  return angle * 360 / (2 * Math.PI);
+}
+
+function getLength(vector) {
+  return Math.sqrt((vector.x * vector.x) + (vector.y * vector.y));
+}
+
+function onCanvasTapped(x, y) {
+  tapCount += 5;
+}
+
+</script>

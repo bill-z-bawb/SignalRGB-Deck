@@ -1,0 +1,249 @@
+<head>
+  <title>Multiverse</title>
+  <meta description="RGB worlds form and merge together." />
+  <meta publisher="SignalRGB" />
+
+  <meta
+  property="map_mode"
+  label="Universe Color Mode"
+  type="combobox"
+  values="Static,Color Cycle,Gradient"
+  default="Gradient"
+  />
+  <meta property="mapGrad" label="Universe Gradient Width" type="number" default="50" min="0" max="100" />
+  <meta property="mapColor" label="Universe Color" type="color" default="#00f900" min="0" max="360" />
+  <meta
+  property="theScale"
+  tooltip="High CPU Impact"
+  label="Universe Pixel Scale"
+  type="number"
+  min="1"
+  max="15"
+  default="7"
+  />
+  <meta
+  property="lineNumber"
+  tooltip="High CPU Impact"
+  label="Universe RGB Density"
+  type="number"
+  min="1"
+  max="100"
+  default="40"
+  />
+  <meta
+  property="range"
+  label="Universe color range"
+  type="number"
+  min="0"
+  max="360"
+  default="145"
+  />
+  <meta
+  property="alpha"
+  label="Universe Transparency"
+  type="number"
+  min="0"
+  max="100"
+  default="12"
+  />
+  <meta
+  property="variance"
+  tooltip="High CPU Impact"
+  label="Universe zoom"
+  type="number"
+  min="0"
+  max="100"
+  default="60"
+  />
+  <meta
+  property="refresh"
+  label="Speed"
+  type="number"
+  min="0"
+  max="100"
+  default="68"
+  />
+  <meta
+  property="line_mode"
+  label="Separation Color Mode"
+  type="combobox"
+  values="Static,Color Cycle,Gradient"
+  default="Static"
+  />
+  <meta property="lineGrad" label="Separation Gradient Width" type="number" default="50" min="0" max="100" />
+  <meta property="lineColor" label="Separation Color" type="color" default="#2c0707" min="0" max="360" />
+  <meta
+  property="lineRange"
+  label="Separation range"
+  type="number"
+  min="-100"
+  max="100"
+  default="-10"
+  />
+  <meta
+  property="lineThick"
+  label="Separation thickness"
+  type="number"
+  min="0"
+  max="100"
+  default="20"
+  />
+</head>
+<body style="margin: 0; padding: 0; background: #000;">
+<canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+<script>
+  //engine.
+canvas = document.getElementById('exCanvas');
+ctx = canvas.getContext('2d');
+var effects = [];
+var proLineColor;
+var oldLineColor = 0;
+var lineCycle = 0;
+var mapCycle = 180;
+var proMapColor;
+var globalMapColor = 0;
+var oldMapColor = 0;
+var globalLineColor = 0;
+var n;
+var m;
+var pixelObj = {}
+
+function update(){
+  n = (Math.sin(Date.now() / (Math.pow(100 - refresh, 3))) * variance) / 10;
+  m = (Math.cos((Date.now() - 1000) / (Math.pow(100 - refresh, 3))) * variance) / 10;
+  if(!oldLineColor || oldLineColor != lineColor){
+    oldLineColor = lineColor;
+    proLineColor = hexToHSL(lineColor)
+  }
+  if(!oldMapColor || oldMapColor != mapColor){
+    oldMapColor = mapColor;
+    proMapColor = hexToHSL(mapColor)
+  }
+  if(line_mode == "Static"){
+    globalLineColor = lineColor;
+  } else if (line_mode == "Color Cycle"){
+    globalLineColor = `hsl(${lineCycle}, ${proLineColor[1]}%, ${proLineColor[2]}%)`;
+    lineCycle < 360 ? lineCycle+=.5 : lineCycle = 0;
+  } 
+  if(map_mode == "Static"){
+    globalMapColor = proMapColor[0]
+  } else if (map_mode == "Color Cycle"){
+    globalMapColor = mapCycle
+    mapCycle < 360 ? mapCycle+=.5 : mapCycle = 0;
+  }
+  if(refresh > 0){
+    drawChladni()
+  }
+  window.requestAnimationFrame(update);
+}
+
+function drawChladni(){
+  ctx.globalAlpha = alpha / 100
+  var mod = theScale * 10
+  var scale = Math.pow(mod, 2)
+  for(let i = 0; i < scale; i++){
+    var x;
+    var y;
+    if(pixelObj[i]){
+      x = pixelObj[i][0];
+      y = pixelObj[i][1];
+    } else {
+      x = ((i % mod) * (320 / mod))
+      y = ((Math.floor(i / mod)) * (200 / mod))
+      pixelObj.i = [x, y]
+    }
+    var d = Math.cos(n * Math.PI * x / 300) * Math.cos(m * Math.PI * y / 300) - Math.cos(m * Math.PI * x / 300) * Math.cos(n * Math.PI * y / 300);
+    var color;
+    if(Math.abs(d - (lineRange / 100)) < (lineThick / 100)){
+      if(line_mode == "Gradient"){
+        color = `hsl(${(x + y) * lineGrad / 50}, ${proLineColor[1]}%, ${proLineColor[2]}%)`;
+      } else {
+        color = globalLineColor;
+      }
+    } else {
+      if(map_mode == "Gradient"){
+        globalMapColor = (x + y) * mapGrad / 50;
+      }
+      color = `hsl(${((Math.abs(Math.floor(d * 100)) % lineNumber) / lineNumber) * range + globalMapColor}, ${proMapColor[1]}%, ${proMapColor[2]}%)`;
+    }
+    DrawRect(x, y, 320 / mod, 200 / mod, color)
+  }
+  ctx.globalAlpha = 1
+}
+
+function hexToHSL(H) {
+  // Convert hex to RGB first
+  let r = 0, g = 0, b = 0;
+  if (H.length == 4) {
+    r = "0x" + H[1] + H[1];
+    g = "0x" + H[2] + H[2];
+    b = "0x" + H[3] + H[3];
+  } else if (H.length == 7) {
+    r = "0x" + H[1] + H[2];
+    g = "0x" + H[3] + H[4];
+    b = "0x" + H[5] + H[6];
+  }
+  // Then to HSL
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  let cmin = Math.min(r,g,b),
+      cmax = Math.max(r,g,b),
+      delta = cmax - cmin,
+      h = 0,
+      s = 0,
+      l = 0;
+
+  if (delta == 0)
+    h = 0;
+  else if (cmax == r)
+    h = ((g - b) / delta) % 6;
+  else if (cmax == g)
+    h = (b - r) / delta + 2;
+  else
+    h = (r - g) / delta + 4;
+
+  h = Math.round(h * 60);
+
+  if (h < 0)
+    h += 360;
+
+  l = (cmax + cmin) / 2;
+  s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+  s = +(s * 100).toFixed(1);
+  l = +(l * 100).toFixed(1);
+
+  return [h, s, l];
+}
+
+function renderPath(x, y, path, color){
+  ctx.fillStyle = color;
+  ctx.save();
+  ctx.translate(x, y);
+  let ex = new Path2D(path);
+  ctx.fill(ex);
+  ctx.restore();
+}
+
+  function DrawCircle(x,y,radius,color){
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x,y,radius, 0, 2* Math.PI)
+      ctx.fill();
+  };
+
+  function DrawStroke(x,y,radius,color){
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.arc(x,y,radius, 0, 2* Math.PI)
+      ctx.stroke();
+  };
+
+  function DrawRect(x, y, height, width, color){
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, height, width);
+  }
+  window.requestAnimationFrame(update);
+</script>
