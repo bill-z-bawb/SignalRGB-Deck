@@ -1,0 +1,159 @@
+<head>
+  <title>Visor</title>
+  <meta description="An effect that sweeps across your devices." />
+  <meta publisher="SignalRGB" />
+
+  <meta
+    property="color"
+    label="Color"
+    type="color"
+    min="0"
+    max="360"
+    default="#ff0066"
+  />
+  <meta
+    property="randomColors"
+    label="Random Color"
+    type="boolean"
+    default="0"
+  />
+  <meta
+    property="speed"
+    label="Visor Speed"
+    type="number"
+    min="0"
+    max="100"
+    default="30"
+  />
+  <meta
+    property="barWidth"
+    label="Bar Width"
+    type="number"
+    min="1"
+    max="50"
+    default="20"
+  />
+  <meta property="vertical" label="Vertical" type="boolean" default="1" />
+  <meta
+    property="bgColor"
+    label="Background Color"
+    type="color"
+    min="0"
+    max="360"
+    default="#000000"
+  />
+</head>
+
+<body style="margin: 0; padding: 0">
+  <canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+
+<script>
+  var c = document.getElementById("exCanvas");
+  var ctx = c.getContext("2d");
+  var width = 320;
+  var height = 200;
+  var speed = 1;
+  var currentColor;
+
+  var vIsNegative;
+  var hIsNegative;
+
+  function update() {
+    if (vertical) {
+      drawVert();
+    } else {
+      drawHoriz();
+    }
+
+    if (!randomColors) {
+      currentColor = color;
+    }
+    window.requestAnimationFrame(update);
+  }
+
+  //begin vertical code
+  var startPosV = [320, 0];
+  var endPosV = [0, 0];
+  //amount to incriment visor by
+  var dxV = -Math.round(speed / 10);
+  var xV = startPosV[0],
+    yV = startPosV[1];
+
+  function drawVert() {
+    if (vIsNegative) {
+      var dxV = -speed / 10;
+    } else {
+      var dxV = speed / 10;
+    }
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = currentColor;
+    ctx.fillRect(xV, yV, barWidth, 200);
+
+    xV += dxV;
+    if (xV >= 320 - barWidth) {
+      vIsNegative = true;
+
+      if (randomColors) {
+        currentColor = generateColor();
+      } else {
+        currentColor = color;
+      }
+    } else if (xV <= 0) {
+      vIsNegative = false;
+
+      if (randomColors) {
+        currentColor = generateColor();
+      } else {
+        currentColor = color;
+      }
+    }
+  }
+  //end vertical code
+
+  //begin horizontal code
+  var startPosH = [0, 200];
+  var endPosH = [0, 0];
+  var xH = startPosH[0],
+    yH = startPosH[1];
+
+  function drawHoriz() {
+    //if speed should be negative,
+    if (hIsNegative) {
+      var dyH = -speed / 10;
+    } else {
+      var dyH = speed / 10;
+    }
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = currentColor;
+    ctx.fillRect(xH, yH, 320, barWidth);
+    yH += dyH;
+
+    if (yH > 200 - barWidth) {
+      hIsNegative = true;
+
+      if (randomColors) {
+        currentColor = generateColor();
+      } else {
+        currentColor = color;
+      }
+    } else if (yH < 0) {
+      hIsNegative = false;
+
+      if (randomColors) {
+        currentColor = generateColor();
+      } else {
+        currentColor = color;
+      }
+    }
+  }
+  //end horizontal code
+
+  window.requestAnimationFrame(update);
+
+  function generateColor() {
+    return "#" + Math.floor(Math.random() * 16777215).toString(16);
+  }
+</script>

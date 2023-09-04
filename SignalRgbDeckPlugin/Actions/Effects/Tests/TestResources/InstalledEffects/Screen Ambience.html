@@ -1,0 +1,153 @@
+<head>
+    <title>Screen Ambience</title>
+    <meta description="Natural Screen Ambience effect with updated colorboost."/>
+    <meta publisher="WhirlwindFX" />
+    <meta property="picture_mode" label="Picture Mode" type="combobox" values="Standard,Cinema,Mono,Vivid,Dominant,HD" default="Vivid">  
+    <meta property="boost" label="Color Shift" type="number" min="-40" max="40" default="0">
+    <meta property="brightness" label="Brightness" type="number" min="-40" max="40" default="0">
+    <meta property="saturation" label="Saturation" type="number" min="-40" max="40" default="0">  
+</head>
+
+<body style="margin: 0; padding: 0; background: #000;">
+  <canvas id="exCanvas" width="320" height="200"></canvas>  
+</body>
+
+<script>    
+    var canvas, ctx;
+    var g_DomHue = -1;
+    const img = new Image(320,200); // Create new img element
+    const img2 = new Image();
+    var black = {
+    r: 0,
+    g: 0,
+    b: 0,
+    a: 255
+};
+//img.src =
+//  "data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw==";
+
+    function random(min, max) {
+      var num = Math.floor(Math.random() * (max - min)) + min;
+      // if min = 10 max = 15 random var = 0.1544465; it will return approzimately 10 because of math.floor
+      return num;
+    }
+
+    function onEngineReady()
+    {      
+      // Grab canvas and rendering context.
+      canvas = document.getElementById( 'exCanvas' );
+      ctx = canvas.getContext( '2d' );            
+
+      console.log("Engine ready.");
+
+      window.requestAnimationFrame(update);      
+    }
+
+    var setPixel = function (x,y,c) {
+      var p=ctx.createImageData(1,1);
+      p.data[0]=c.r;
+      p.data[1]=c.g;
+      p.data[2]=c.b;
+      p.data[3]=c.a;
+      ctx.putImageData(p,x,y);
+
+      ctx.fillStyle = 'hsl('+50+','+100+'%,'+0+'%)'
+      ctx.fillRect(x, y, 1, 1);
+
+    }
+
+    function drawHD()
+    {
+      let colorz = new Uint8Array(engine.zone.imagedata);
+      for(var iZone = 0; iZone < 16000; iZone++)
+      {        
+        var iRow = Math.floor(iZone / 160);
+        var iCol = iZone % 160;
+        var zx = iCol * 2;
+        var zy = iRow * 2;
+        ctx.fillStyle = ctx.fillStyle = `rgb(
+          ${colorz[iZone*4]},
+          ${colorz[iZone*4+1]},
+          ${colorz[iZone*4+2]})`;
+        ctx.fillRect(zx, zy, 2, 2);
+      }
+    }
+
+    function drawST()
+    {
+      let lightness = new Int8Array(engine.zone.lightness);
+      let sat = new Int8Array(engine.zone.saturation);
+      let zhue = new Int16Array(engine.zone.hue);
+
+      var bMono = picture_mode === "Mono";
+      var bVivid = picture_mode === "Vivid";
+      var bCinema = picture_mode === "Cinema";
+      var bDominant = picture_mode === "Dominant";
+
+      var iDomZone = 0;
+      var iDomSat = 0;
+
+      if (bDominant)
+      {
+        for(var iZone = 0; iZone < 560; iZone++) { 
+          if (lightness[iZone] > 30 && sat[iZone] > iDomSat){ 
+            iDomSat = iDomSat;
+            iDomZone = iZone; 
+          }
+        }
+        if (g_DomHue == -1) { g_DomHue = zhue[iDomZone]; }
+        else {
+          if (zhue[iDomZone] > g_DomHue) { g_DomHue+=1; }
+          else if (zhue[iDomZone] < g_DomHue){ g_DomHue-=1; }
+        }
+      }
+
+      for(var iZone = 0; iZone < 560; iZone++)
+      {        
+        var xZoneBrightness = lightness[iZone] + brightness;
+        if (xZoneBrightness < 0) xZoneBrightness = 0;
+        if (xZoneBrightness > 100) xZoneBrightness = 100;
+
+        var xZoneSaturation= sat[iZone] + saturation;
+        if (xZoneSaturation < 0) xZoneSaturation = 0;
+        if (xZoneSaturation > 100) xZoneSaturation = 100;
+
+        var hue = zhue[iZone] + boost;
+        if (bMono){
+          ctx.fillStyle = 'hsl('+hue+','+0+'%,'+xZoneBrightness+'%)'
+        } else if (bVivid) {
+          ctx.fillStyle = 'hsl('+hue+','+(xZoneSaturation + 10)+'%,'+xZoneBrightness+'%)'
+        } else if (bCinema){
+          ctx.fillStyle = 'hsl('+hue+','+(xZoneSaturation - 10)+'%,'+xZoneBrightness+'%)'
+        } else if (bDominant) {
+          ctx.fillStyle = 'hsl('+g_DomHue+','+xZoneSaturation+'%,'+xZoneBrightness+'%)'
+        } else {
+          ctx.fillStyle = 'hsl('+hue+','+xZoneSaturation+'%,'+xZoneBrightness+'%)'
+        }
+        
+        
+        var iRow = Math.floor(iZone / 28);
+        var iCol = iZone % 28;
+        var iWidth = 320 / 28;
+        var iHeight = 200 / 20;
+        var zx = iCol * iWidth;
+        var zy = iRow * iHeight;
+        
+        ctx.fillRect(zx, zy, iWidth, iHeight);
+      }
+    }
+
+    function update()
+    {            
+      var bHighRes = picture_mode === "HD";
+
+      if (!bHighRes){
+        drawST();
+      } else {
+        drawHD();
+      }
+      
+      window.requestAnimationFrame(update);
+    }
+
+</script>

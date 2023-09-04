@@ -1,0 +1,56 @@
+<head>
+  <title>Neon Shift</title>
+    
+  <meta description="Shifty Neonz."/>
+  <meta publisher="WhirlwindFX" />
+
+  <meta property="speed" label="Shift Speed" type="number" min="1" max="30" default="3">
+</head>
+
+<body style="margin: 0; padding: 0; background: black;">
+  <canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+
+<script>
+  console.clear();
+
+  // Get the canvas element from the DOM
+  var c = document.getElementById("exCanvas");
+  var ctx = c.getContext("2d");  
+  var width = 320;
+  var height = 200;
+  var hue = 1; 
+
+  var signalColorsRgb = ["#E383c0","#996799","#5766b0","#80bee3"];
+  var signalColorsHsl = [[322, 63, 70],[280, 50, 50],[230, 36, 52],[202, 64, 70]];
+  var phase = 0;
+  var currSignalColorIdx = 0;
+
+  function drawSignalRgbShift()
+  {
+    var iHue = signalColorsHsl[currSignalColorIdx][0];
+    var iSat = signalColorsHsl[currSignalColorIdx][1];
+    var iLit = signalColorsHsl[currSignalColorIdx][2];
+
+    ctx.fillStyle = 'hsla('+ iHue + ', 100%, ' + iLit / 2 + '%, .05)';
+    ctx.fillRect(0, 0, width, height);
+
+    phase+=speed;
+    if (phase > 500){
+      phase = 0;
+      currSignalColorIdx++;
+      if (currSignalColorIdx >= 4) { currSignalColorIdx = 0; }
+    }
+
+  }
+
+  function update() 
+  {
+    drawSignalRgbShift();
+    
+    window.requestAnimationFrame(update);
+  }
+
+  window.requestAnimationFrame(update);
+
+</script>

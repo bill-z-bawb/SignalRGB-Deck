@@ -1,0 +1,371 @@
+<head>
+  <title>Koi Pond</title>
+  <meta description="Sit back and relax next to an RGB koi pond. Type to feed the fish." />
+  <meta publisher="SignalRGB" />
+  <meta property="fishSpeed" label="Fish Speed" type="number" min="0" max="100" default="30"/>
+  <meta property="fishNum" label="Number of fish" type="number" min="0" max="20" default="5"/>
+  <meta property="fishSize" label="Fish Size" type="number" min="15" max="100" default="35"/>
+  <meta property="poolBounds" label="Pool Scale" type="number" min="0" max="100" default="50"/>
+  <meta property="bg_mode" label="Background Color Mode" type="combobox" values="Static,Color Cycle" default="Static" />
+  <meta property="backColor" label="Background Color" type="color" default="#0f3058" min="0" max="360" />
+  <meta property="fish_mode" label="Fish Color Mode" type="combobox" values="Static,Color Cycle,Rainbow,Gradient" default="Static" />
+  <meta property="fishColor1" label="Fish Color 1" type="color" default="#FCA500" min="0" max="360" />
+  <meta property="fishColor2" label="Fish Color 2" type="color" default="#FFFFFF" min="0" max="360" />
+  <meta property="fishRand" label="Fish Color Variance" type="boolean" default="0" />
+  <meta property="fishVar" label="Color Variance Strength" type="number" min="0" max="100" default="30"/>
+  <meta property="lilyNum" label="Number of lily pads" type="number" min="0" max="30" default="5"/>
+  <meta property="lilySize" label="Lily Pad Size" type="number" min="0" max="100" default="50"/>
+  <meta property="lily_mode" label="Lily Color Mode" type="combobox" values="Static,Color Cycle,Rainbow,Gradient" default="Static" />
+  <meta property="lilyColor" label="Lily Color" type="color" default="#256d0f" min="0" max="360" />
+  <meta property="lilyRand" label="Lily Color Variance" type="boolean" default="0" />
+  <meta property="lilyVar" label="Color Variance Strength" type="number" min="0" max="100" default="30"/>
+  <meta property="waterAmount" label="Water Effect Strength" type="number" min="0" max="50" default="20"/>
+  <meta property="waterSpeed" label="Water Effect Speed" type="number" min="0" max="100" default="30"/>
+  <meta property="waterBright" label="Water Brightness" type="number" min="0" max="100" default="5"/>
+  <meta property="waterColor" label="Water Effect Color" type="color" default="#ffffff" min="0" max="360" />
+</head>
+
+<body style="margin: 0; padding: 0; background: #000;">
+<canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+
+<script>
+  //engine.
+canvas = document.getElementById('exCanvas');
+ctx = canvas.getContext('2d');
+var fishes = [];
+var foods = [];
+var lilies = [];
+var water = [];
+var foodCheck = {};
+var backCycle = 0;
+var fishCycle1 = 0;
+var fishCycle2 = 60;
+var oldFishSpeed = 0;
+var oldFishSize = 0;
+var oldWaterSpeed = 0;
+var lilyArr = [];
+var oldLilyColor = '';
+var fish1Array = [];
+var oldFish1Color = '';
+var fish2Array = [];
+var oldFish2Color = '';
+
+function update(){
+  if(oldLilyColor != lilyColor){
+    lilyArr = hexToHSL(lilyColor);
+    oldLilyColor = lilyColor;
+  }
+  if(oldFish1Color != fishColor1){
+    fish1Arr = hexToHSL(fishColor1);
+    oldFish1Color = fishColor1;
+  }
+  if(oldFish2Color != fishColor2){
+    fish2Arr = hexToHSL(fishColor2);
+    oldFish2Color = fishColor2;
+  }
+
+  if(oldFishSpeed != fishSpeed || oldFishSize != fishSize){
+    oldFishSpeed = fishSpeed;
+    oldFishSize = fishSize;
+    fishes.length = 0;
+  }
+
+  if(oldWaterSpeed != waterSpeed){
+    oldWaterSpeed = waterSpeed;
+    water.length = 0;
+  }
+
+  if (fishes.length < fishNum){
+    fishes.push(new fish());
+  } else if (fishes.length > fishNum){
+    fishes.pop();
+  }
+  fishCycle1 < 360 ? fishCycle1++ : fishCycle1 = 0;
+  fishCycle2 < 360 ? fishCycle2++ : fishCycle2 = 0;
+
+  if (lilies.length < lilyNum){
+    lilies.push(new lilyPad())
+  } else if (lilies.length > lilyNum){
+    lilies.pop();
+  }
+
+  if (water.length < waterAmount){
+    water.push(new waterNoise());
+  } else if (water.length > waterAmount){
+    water.pop();
+  }
+
+  if(fishSpeed){
+    if(bg_mode == "Static"){
+      ctx.fillStyle = backColor;
+    } else {
+      var backColorCycle = hexToHSL(backColor)
+      ctx.fillStyle = `hsl(${backCycle}, ${backColorCycle[1]}%, ${backColorCycle[2]}%)`;
+      backCycle < 360 ? backCycle += .5 : backCycle = 0;
+    }
+    ctx.fillRect(0, 0, 320, 200);
+
+    ctx.save()
+    ctx.translate(160, 100)
+    ctx.scale(poolBounds / 200 + .5, poolBounds / 200 + .5)
+    ctx.translate(-160, -100)
+    foods.forEach((ele, i) => {
+      ele.draw();
+      if (ele.lifetime <= 0){
+        foods.splice(i, 1);
+      }
+    });
+    fishes.forEach((ele) => {
+      ele.draw();
+    })
+    ctx.restore()
+    water.forEach((ele) => {
+      ele.draw();
+    });
+    lilies.forEach((ele) => {
+      ele.draw(lilyArr);
+    });
+  }
+
+  window.requestAnimationFrame(update);
+}
+
+    function fish(){
+      this.speed = Math.random() * fishSpeed / 20 + 1;
+      this.variance = Math.random();
+      this.x = Math.random() * 100 + 110;
+      this.vx = fishes.length % 2 == 0 ? 1 * this.speed : -1 * this.speed;
+      this.y = Math.random() * 100 + 50;
+      this.vy = fishes.length % 2 == 0 ? -1 * this.speed : 1 * this.speed;
+      this.radius = 20;
+      this.searchRange = 1;
+      this.goTo = null;
+      this.goXV = null;
+      this.goYV = null;
+      this.count = 0;
+      this.effects = [];
+
+      this.draw = function(){
+        //Color Calculations
+        var fishMod = fishVar - this.variance * fishVar * 2;
+        var fish1;
+        var fish2;
+        var fish1Array = hexToHSL(fishColor1);
+        var fish2Array = hexToHSL(fishColor2);
+        if(fish_mode == "Static"){
+          fish1 = `hsl(${fish1Array[0] + (fishRand ? fishMod : 0)}, ${fish1Array[1]}%, ${fish1Array[2]}%)`;
+          fish2 = `hsl(${fish2Array[0] + (fishRand ? fishMod : 0)}, ${fish2Array[1]}%, ${fish2Array[2]}%)`;
+        } else if (fish_mode == "Color Cycle"){
+          fish1 = `hsl(${fishCycle1 + (fishRand ? fishMod : 0)}, ${fish1Array[1]}%, ${fish1Array[2]}%)`;
+          fish2 = `hsl(${fishCycle2 + (fishRand ? fishMod : 0)}, ${fish2Array[1]}%, ${fish2Array[2]}%)`;
+        } else if (fish_mode == "Rainbow"){
+          fish1 = `hsl(${this.variance * 360 + (fishRand ? fishMod : 0)}, ${fish1Array[1]}%, ${fish1Array[2]}%)`;
+          fish2 = `hsl(${this.variance * 270 + (fishRand ? fishMod : 0)}, ${fish2Array[1]}%, ${fish2Array[2]}%)`;
+        } else {
+          fish1 = `hsl(${this.x + this.y + (fishRand ? fishMod : 0)}, ${fish1Array[1]}%, ${fish1Array[2]}%)`;
+          fish2 = `hsl(${this.x + this.y + (fishRand ? fishMod : 0)}, ${fish2Array[1]}%, ${fish2Array[2]}%)`;
+        }
+        this.radius = fishSize * .66;
+        //Movement check, two modes - if food is detected or not
+        if(this.goTo == null){
+          (this.x + this.vx + this.radius > 420 || this.x + this.vx - this.radius < -100) ? this.vx *= -1 : null;
+          (this.y + this.vy + this.radius > 350 || this.y + this.vy - this.radius < -150) ? this.vy *= -1 : null;
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vx = this.vx + (160 - this.x) / 15000;
+          this.vy = this.vy + (100 - this.y) / 4000;
+          //Look for food
+          for (let i = 0; i < foods.length; i++){
+            if (Math.abs(this.x - foods[i].x) < this.searchRange && Math.abs(this.y - foods[i].y) < this.searchRange){
+              this.goTo = [foods[i].x, foods[i].y];
+              var xDistance = this.x - this.goTo[0];
+              var yDistance = this.y - this.goTo[1];
+              this.goXV = xDistance / -15;
+              this.goYV = yDistance / -15;
+              break;
+            } else {
+              this.searchRange += 5;
+              this.searchRange > 150 ? this.searchRange = 1 : null;
+            }
+          }
+        } else {
+          this.x += this.goXV;
+          this.y += this.goYV;
+
+          if (Math.abs(this.x - this.goTo[0]) < this.radius && Math.abs(this.y - this.goTo[1]) < this.radius){
+            this.goTo = null;
+            this.goXV = null;
+            this.goYV = null;
+            if(Math.random() < .25){
+              this.vx = 1 * this.speed;
+              this.vy = -1 * this.speed;
+            } else if(Math.random() < .5){
+              this.vx = 1 * this.speed;
+              this.vy = 1 * this.speed;
+            } else if(Math.random() < .75){
+              this.vx = -1 * this.speed;
+              this.vy = 1 * this.speed;
+            } else {
+              this.vx = -1 * this.speed;
+              this.vy = -1 * this.speed;
+            }
+          }
+        }
+        if(++this.count == 3){
+            this.effects.unshift([this.x, this.y])
+            if(this.effects.length > 10) this.effects.pop();
+            this.count = 0;
+          }
+          this.effects.forEach((ele, i) => {
+            ctx.globalAlpha = 1 - (i * .11)
+            DrawCircle(ele[0], ele[1], this.radius - (i * 2) > 1 ? this.radius - (i * 2) : 1, i % 2 == 0 ? fish1 : fish2);
+            ctx.globalAlpha = 1;
+          })
+      }
+    }
+
+    function onCanvasTapped(x, y) {
+      var location = x + y;
+      if (foodCheck[location]){
+        if (Date.now() - foodCheck[location] < 1000){
+          foods.push(new food(x, y));
+        } else {
+          foodCheck[location] = Date.now();
+        }
+      } else {
+        foodCheck[location] = Date.now();
+      }
+    }
+
+    var lilyCycle = 0;
+    function lilyPad(){
+      this.x = Math.random() * 200 + 60;
+      this.vx = lilies.length % 2 == 0 ? .25 : -.25;
+      this.vy = lilies.length % 2 == 0 ? -.25 : .25;
+      this.y = Math.random() * 100 + 50;
+      this.radius = 1;
+      this.mod = Math.random();
+      this.rain = this.mod * 360;
+
+      this.draw = function(lilyArr){
+        var thisLilyColor;
+        if(lily_mode == "Static"){
+          thisLilyColor = `hsl(${lilyArr[0]  + (lilyRand ? lilyVar * this.mod : 0)}, ${lilyArr[1]}%, ${lilyArr[2]}%)`;
+        } else if (lily_mode == "Color Cycle"){
+          thisLilyColor = `hsl(${lilyCycle + (lilyRand ? lilyVar * this.mod : 0)}, ${lilyArr[1]}%, ${lilyArr[2]}%)`
+          lilyCycle < 360 ? lilyCycle+=.1 : lilyCycle = 0;
+        } else if (lily_mode == "Rainbow"){
+          thisLilyColor = `hsl(${this.rain}, ${lilyArr[1]}%, ${lilyArr[2]}%)`
+        } else {
+          thisLilyColor = `hsl(${this.x + this.y - 100}, ${lilyArr[1]}%, ${lilyArr[2]}%)`
+        }
+        this.radius = (this.mod * lilySize + 10) * .66;
+        (this.x + this.vx > 320 || this.x + this.vx < 0) ? this.vx *= -1 : null;
+        (this.y + this.vy > 200 || this.y + this.vy < 0) ? this.vy *= -1 : null;
+        this.x += this.vx;
+        this.y += this.vy;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = thisLilyColor;
+        ctx.fill();
+      }
+    }
+
+    function waterNoise(){
+      this.speed = Math.random() * waterSpeed / 20;
+      this.x = Math.random() * 200 + 60;
+      this.vx = lilies.length % 2 == 0 ? .5 * this.speed : -.5 * this.speed;
+      this.vy = lilies.length % 2 == 0 ? -.5 * this.speed : .5 * this.speed;
+      this.y = Math.random() * 100 + 50;
+      this.radius = Math.random() * 20 + 20;
+
+      this.draw = function(){
+        (this.x + this.vx > 320 || this.x + this.vx < 0) ? this.vx *= -1 : null;
+        (this.y + this.vy > 200 || this.y + this.vy < 0) ? this.vy *= -1 : null;
+        this.x += this.vx;
+        this.y += this.vy;
+        ctx.globalAlpha = waterBright / 100;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = waterColor;
+        ctx.lineWidth = 10;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function food(x, y){
+      this.x = x;
+      this.y = y;
+      this.lifetime = 10;
+      this.location = x + y;
+      this.start = Date.now();
+      this.draw = function(){
+        if (Date.now() - this.start > 3000){
+          this.lifetime = 0;
+        }
+        DrawCircle(this.x, this.y, 15, "brown");
+        for (let i = 0; i < fishes.length; i++){
+          if (Math.abs(fishes[i].x - this.x) < fishes[i].radius && Math.abs(fishes[i].y - this.y) < fishes[i].radius){
+            this.lifetime = 0;
+            break;
+          }
+        }
+      }
+    }
+
+    function hexToHSL(H) {
+      // Convert hex to RGB first
+      let r = 0, g = 0, b = 0;
+      if (H.length == 4) {
+        r = "0x" + H[1] + H[1];
+        g = "0x" + H[2] + H[2];
+        b = "0x" + H[3] + H[3];
+      } else if (H.length == 7) {
+        r = "0x" + H[1] + H[2];
+        g = "0x" + H[3] + H[4];
+        b = "0x" + H[5] + H[6];
+      }
+      // Then to HSL
+      r /= 255;
+      g /= 255;
+      b /= 255;
+      let cmin = Math.min(r,g,b),
+          cmax = Math.max(r,g,b),
+          delta = cmax - cmin,
+          h = 0,
+          s = 0,
+          l = 0;
+    
+      if (delta == 0)
+        h = 0;
+      else if (cmax == r)
+        h = ((g - b) / delta) % 6;
+      else if (cmax == g)
+        h = (b - r) / delta + 2;
+      else
+        h = (r - g) / delta + 4;
+    
+      h = Math.round(h * 60);
+    
+      if (h < 0)
+        h += 360;
+    
+      l = (cmax + cmin) / 2;
+      s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+      s = +(s * 100).toFixed(1);
+      l = +(l * 100).toFixed(1);
+    
+      return [h, s, l];
+    }
+
+    function DrawCircle(x,y,radius,color){
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x,y,radius, 0, 2* Math.PI)
+      ctx.fill();
+    };
+
+window.requestAnimationFrame(update);
+</script>

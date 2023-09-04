@@ -1,0 +1,179 @@
+<head>
+  <title>Side to Side</title>
+
+  <meta description="Side to Side"/>
+  <meta publisher="SignalRGB" />
+  <meta property="direction" label="Direction" type="combobox" values="Side to Side,Up and Down,All Directions" default="All Directions">
+  <meta property="color1" label="Color 1" type="color" min="0" max="360" default="#F55200">
+  <meta property="color2" label="Color 2" type="color" min="0" max="360" default="#00F5D3">
+  <meta property="rainbow" label="Rainbow Mode" type="boolean" default="0" />
+  <meta property="speed" label="Speed" type="number" default="2" min="0" max="100">
+
+</head>
+
+<body style="margin: 0; padding: 0;">
+  <canvas id="exCanvas" width="320" height="200"></canvas>
+</body>
+
+<script>
+  console.clear();
+  var c = document.getElementById("exCanvas");
+  var ctx = c.getContext("2d");
+  var width = 320;
+  var height = 200;
+  var timer = 2000;
+  var waves = [];
+  var move = -320;
+  var move2 = 320;
+  var vmove = -200;
+  var vmove2 = 200;
+  var i = 0;
+  var rand =0;
+  function wave(y) {
+  var size = 1;
+  this.duration = 20;
+  this.y = y;
+  
+  this.draw = function() {
+  ctx.fillStyle = color1;
+  if(rainbow){
+        if(i == 0){
+        ctx.fillStyle = "FF0404";
+        }
+        if(i == 1){
+        ctx.fillStyle = "FF8904";
+        }
+        if(i == 2){
+        ctx.fillStyle = "FBFF04";
+        }
+        if(i == 3){
+        ctx.fillStyle = "54FF04";
+        }
+        if(i == 4){
+        ctx.fillStyle = "046BFF";
+        }
+        if(i == 5){
+        ctx.fillStyle = "6304FF";
+        }
+        if(i>=6){
+            i=0;
+          }
+  }
+  
+  if(direction == "Up and Down" || (direction == "All Directions" && rand == 1)){
+    ctx.fillRect(y, vmove,320,200);
+    vmove = (speed/5) + vmove;
+    if(vmove > 200 && vmove2 == 200 ){
+      i++;
+    }
+    if (vmove > 200){
+      ctx.fillStyle = color2;
+      if(rainbow){
+        if(i == 0){
+        ctx.fillStyle = "FF0404";
+        }
+        if(i == 1){
+        ctx.fillStyle = "FF8904";
+        }
+        if(i == 2){
+        ctx.fillStyle = "FBFF04";
+        }
+        if(i == 3){
+        ctx.fillStyle = "54FF04";
+        }
+        if(i == 4){
+        ctx.fillStyle = "046BFF";
+        }
+        if(i == 5){
+        ctx.fillStyle = "6304FF";
+        }
+        if(i>=6){
+            i=0;
+          }
+      }
+      ctx.fillRect(y, vmove2,320,200);
+      vmove2 = vmove2-(speed/5);
+      if(vmove2 <= -200){
+        i++;
+      }
+      if(vmove2 <=-200){
+        vmove = -200;
+        vmove2 = 200;
+        rand=0;
+      }
+    }
+  }
+  else{
+    if(direction == "Side to Side" ||(direction == "All Directions" && rand == 0) ){
+    ctx.fillRect(move, y,320,200);
+    move = (speed/5) + move;
+    if(move > 320 && move2 == 320){
+      i++;
+    }
+    if (move > 320){
+      ctx.fillStyle = color2;
+        if(rainbow){
+          if(i == 0){
+          ctx.fillStyle = "FF0404";
+          }
+          if(i == 1){
+          ctx.fillStyle = "FF8904";
+          }
+          if(i == 2){
+          ctx.fillStyle = "FBFF04";
+          }
+          if(i == 3){
+          ctx.fillStyle = "54FF04";
+          }
+          if(i == 4){
+          ctx.fillStyle = "046BFF";
+          }
+          if(i == 5){
+          ctx.fillStyle = "6304FF";
+          }
+          if(i>=6){
+            i=0;
+          }
+        }
+    ctx.fillRect(move2, y,320,200);
+    move2 = move2-(speed/5);
+        if(move2 <= -320){
+          i++;
+        }
+        if(move2<=-320){
+          move = -320;
+          move2 =320;
+          rand=1;
+        }
+    }
+}
+}
+  this.duration--;
+};
+}
+
+  function update() 
+  {
+
+    if (timer % 5 == 0) {
+      waves.push(new wave(0));
+      
+    }
+    timer--;
+
+    for (let i = 0; i < waves.length; i++) {
+      waves[i].draw();
+    }
+
+    for (let i = 0; i < waves.length; i++) {
+      if (waves[i].duration <= 0) {
+        waves.splice(i, 1);
+      }
+    }
+
+    window.requestAnimationFrame(update);
+  }
+
+  window.requestAnimationFrame(update);
+
+</script>
