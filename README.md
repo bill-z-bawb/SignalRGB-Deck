@@ -1,3 +1,5 @@
+[![Unit Tests](https://github.com/bill-z-bawb/SignalRGB-Deck/actions/workflows/run-unit-tests.yml/badge.svg?branch=master)](https://github.com/bill-z-bawb/SignalRGB-Deck/actions/workflows/run-unit-tests.yml)
+
 # SignalRGB-Deck Plugin (for StreamDeck)
 
 ## Description
