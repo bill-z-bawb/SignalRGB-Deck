@@ -21,10 +21,18 @@ namespace SignalRgbDeckPlugin.Actions.Effects.Tests
         public static DirectoryInfo InstalledEffectsFolder =>
             new DirectoryInfo(InstalledEffectsPath);
 
+        public static string OtherEffectsPath =>
+            Path.Combine(TestResourcesPath, @"OtherEffects");
+        public static DirectoryInfo OtherEffectsFolder =>
+            new DirectoryInfo(OtherEffectsPath);
+
         public static List<DirectoryInfo> CachedEffectsFolders => 
             CachedEffectsFolder.GetDirectories("*", SearchOption.TopDirectoryOnly).ToList();
 
         public static List<FileInfo> InstalledEffectsFiles =>
             InstalledEffectsFolder.GetFiles("*.html", SearchOption.AllDirectories).ToList();
+
+        public static List<FileInfo> OtherEffectsFiles =>
+            OtherEffectsFolder.GetFiles("*.html", SearchOption.AllDirectories).ToList();
     }
 }
