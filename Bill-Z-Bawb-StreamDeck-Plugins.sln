@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRgbDeckPlugin", "Sign
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamDeckDeployer", "StreamDeckDeployer\StreamDeckDeployer.csproj", "{C5ABDFA2-0668-49C2-83FB-3A87A9390C2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamDeckPlugins.Tests", "StreamDeckPlugins.Tests\StreamDeckPlugins.Tests.csproj", "{042EE274-C864-454D-BEB5-41A02F3835B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,22 @@ Global
 		{C5ABDFA2-0668-49C2-83FB-3A87A9390C2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5ABDFA2-0668-49C2-83FB-3A87A9390C2E}.Release|x64.ActiveCfg = Release|Any CPU
 		{C5ABDFA2-0668-49C2-83FB-3A87A9390C2E}.Release|x64.Build.0 = Release|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Debug|x64.Build.0 = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Debug-Publish-Install|Any CPU.ActiveCfg = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Debug-Publish-Install|Any CPU.Build.0 = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Debug-Publish-Install|x64.ActiveCfg = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Debug-Publish-Install|x64.Build.0 = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Publish|Any CPU.ActiveCfg = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Publish|Any CPU.Build.0 = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Publish|x64.ActiveCfg = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Publish|x64.Build.0 = Debug|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Release|x64.ActiveCfg = Release|Any CPU
+		{042EE274-C864-454D-BEB5-41A02F3835B9}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
