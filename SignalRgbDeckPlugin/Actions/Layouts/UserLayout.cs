@@ -2,7 +2,7 @@
 
 namespace SignalRgbDeckPlugin.Actions.Layouts
 {
-    internal class UserLayout
+    public class UserLayout
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; private set; }

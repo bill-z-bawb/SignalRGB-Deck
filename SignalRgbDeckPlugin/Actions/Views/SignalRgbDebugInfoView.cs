@@ -9,6 +9,6 @@ namespace SignalRgbDeckPlugin.Actions.Views
         {
         }
 
-        public override string ApplicationUrl => "signalrgb://view/debuginfo";
+        public override string[] ApplicationUrls => new[] { "signalrgb://view/debuginfo" };
     }
 }

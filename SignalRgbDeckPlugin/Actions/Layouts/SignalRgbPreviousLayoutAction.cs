@@ -6,9 +6,9 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
     [PluginActionId("com.billzbawb.signalrgb.previouslayout")]
     public class SignalRgbPreviousLayoutAction : SignalRgbKeypadBase
     {
-        public override bool IsApplicationUrlValid => true;
+        public override bool IsApplicationUrlSetValid => true;
 
-        public override string ApplicationUrl
+        public override string[] ApplicationUrls
         {
             get
             {
@@ -18,7 +18,7 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
                 // direction for silent launch
                 url.Append($"?{SilentLaunchRequest}");
 
-                return url.ToString();
+                return new[] { url.ToString() };
             }
         }
 
