@@ -11,7 +11,6 @@ namespace SignalRgbDeckPlugin.Actions
     {
         public const string SilentLaunchRequest = "-silentlaunch-";
 
-        public abstract bool IsApplicationUrlSetValid { get; }
         public abstract string[] ApplicationUrls { get; }
 
         #region Private Members
@@ -109,13 +108,17 @@ namespace SignalRgbDeckPlugin.Actions
 
         public override void KeyReleased(KeyPayload payload)
         {
-            if (!IsApplicationUrlSetValid)
+            foreach (var applicationUrl in ApplicationUrls)
             {
-                Logger.Instance.LogMessage(TracingLevel.ERROR, $"{nameof(SignalRgbKeypadBase)} KeyReleased failed! IsApplicationUrlSetValid is false.");
-                return;
+                try
+                {
+                    OpenWebsite(applicationUrl);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"{nameof(SignalRgbKeypadBase)} => {GetType()} KeyReleased failed for url \"{applicationUrl}\"! {ex.Message}");
+                }
             }
-            
-            ApplicationUrls.ToList().ForEach(OpenWebsite);
         }
 
         private static void OpenWebsite(string url) =>

@@ -6,8 +6,6 @@ namespace SignalRgbDeckPlugin.Actions.Effects
     [PluginActionId("com.billzbawb.signalrgb.previouseffect")]
     public class SignalRgbPreviousEffectAction : SignalRgbKeypadBase
     {
-        public override bool IsApplicationUrlSetValid => true;
-
         public override string[] ApplicationUrls
         {
             get

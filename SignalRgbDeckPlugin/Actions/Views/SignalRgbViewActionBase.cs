@@ -4,8 +4,6 @@ namespace SignalRgbDeckPlugin.Actions.Views
 {
     public abstract class SignalRgbViewActionBase : SignalRgbKeypadBase
     {
-        public override bool IsApplicationUrlSetValid => true;
-
         protected SignalRgbViewActionBase(ISDConnection connection, InitialPayload payload) : base(connection, payload)
         {
         }

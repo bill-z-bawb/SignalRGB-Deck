@@ -14,7 +14,6 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         public const string EffectPropMarker = "-effect-prop";
         private readonly EffectActionSettings settings;
-        private TitleParameters _currenTitleParameters = null;
         
         #endregion
 
@@ -86,7 +85,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         private void Connection_OnTitleParametersDidChange(object sender, SDEventReceivedEventArgs<BarRaider.SdTools.Events.TitleParametersDidChange> e)
         {
-            _currenTitleParameters = e.Event.Payload.TitleParameters;
+            CurrentTitleParameters = e.Event.Payload.TitleParameters;
             UpdateEffectButtonTitle();
         }
 
@@ -171,8 +170,6 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         #region SignalRGB Implementation
 
-        public override bool IsApplicationUrlSetValid => settings.SelectedEffect != null;
-
         public override string[] ApplicationUrls
         {
             get
@@ -192,8 +189,4 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         #endregion
     }
-
-    #region Effect Action Settings
-
-    #endregion
 }

@@ -53,6 +53,9 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         internal static InstalledEffectDetail EffectLookup(string forEffectId)
         {
+            if (string.IsNullOrWhiteSpace(forEffectId))
+                return null;
+
             if (!EffectsDatabase?.Any() ?? true)
             {
                 RefreshEffectsDatabase();

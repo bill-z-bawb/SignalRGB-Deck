@@ -27,7 +27,8 @@
       ],
       "SupportedInMultiActions": true,
       "Tooltip": "Create a shortcut to the previous SignalRGB effect.",
-      "UUID": "com.billzbawb.signalrgb.previouseffect"
+      "UUID": "com.billzbawb.signalrgb.previouseffect",
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Layout/actionList-front",
@@ -56,14 +57,15 @@
       ],
       "SupportedInMultiActions": true,
       "Tooltip": "Create a shortcut to the previous SignalRGB layout.",
-      "UUID": "com.billzbawb.signalrgb.previouslayout"
+      "UUID": "com.billzbawb.signalrgb.previouslayout",
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
-      "Icon": "Images/Actions/Effect/actionList-painters_palette",
+      "Icon": "Images/Actions/LayoutEffectCombo/actionList-layout-effect",
       "Name": "SignalRGB Effect & Layout",
       "States": [
         {
-          "Image": "Images/Actions/Effect/action-painters_palette",
+          "Image": "Images/Actions/LayoutEffectCombo/action-layout-effect",
           "TitleAlignment": "middle",
           "FontSize": "12"
         }
@@ -86,7 +88,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Home view.",
       "UUID": "com.billzbawb.signalrgb.viewdashboard",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Monitoring/actionList-chart_spline",
@@ -101,7 +103,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Monitoring view.",
       "UUID": "com.billzbawb.signalrgb.viewmonitoring",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Cooling/actionList-fan",
@@ -116,7 +118,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Cooling view.",
       "UUID": "com.billzbawb.signalrgb.viewcooling",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Customize/actionList-equalizer",
@@ -131,7 +133,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Customize view.",
       "UUID": "com.billzbawb.signalrgb.viewcustomize",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Devices/actionList-elements_three",
@@ -146,7 +148,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Devices view.",
       "UUID": "com.billzbawb.signalrgb.viewdevices",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Layouts/actionList-elements_selection",
@@ -161,7 +163,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Layouts view.",
       "UUID": "com.billzbawb.signalrgb.viewlayouts",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Plugins/actionList-plug",
@@ -176,7 +178,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Show the SignalRGB User Plugins folder.",
       "UUID": "com.billzbawb.signalrgb.viewplugins",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/DebugInfo/actionList-debug",
@@ -191,7 +193,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Debug Info view.",
       "UUID": "com.billzbawb.signalrgb.viewdebuginfo",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Logs/actionList-text",
@@ -206,7 +208,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Logs view.",
       "UUID": "com.billzbawb.signalrgb.viewlogs",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Dumps/actionList-dump_truck",
@@ -221,7 +223,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Launch the SignalRGB Dumps view.",
       "UUID": "com.billzbawb.signalrgb.viewdumps",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
     {
       "Icon": "Images/Actions/Restart/actionList-rotate_left",
@@ -236,7 +238,7 @@
       "SupportedInMultiActions": true,
       "Tooltip": "Restart the SignalRGB application.",
       "UUID": "com.billzbawb.signalrgb.apprestart",
-      "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectDefault.html"
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     }
   ],
   "Author": "William Z. Bawb and BarRaider",

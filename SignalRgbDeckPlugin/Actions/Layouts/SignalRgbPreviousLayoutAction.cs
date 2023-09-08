@@ -6,8 +6,6 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
     [PluginActionId("com.billzbawb.signalrgb.previouslayout")]
     public class SignalRgbPreviousLayoutAction : SignalRgbKeypadBase
     {
-        public override bool IsApplicationUrlSetValid => true;
-
         public override string[] ApplicationUrls
         {
             get

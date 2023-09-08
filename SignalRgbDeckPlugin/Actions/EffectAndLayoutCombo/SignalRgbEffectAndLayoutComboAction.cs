@@ -68,8 +68,8 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
                     case "fetchEffectProps":
                         var forEffectId = payload["effectId"]?.ToString();
                         Logger.Instance.LogMessage(TracingLevel.INFO, $"fetchEffectProps called for effect ID {forEffectId}");
-                        settings.EffectSettings.SelectedEffectId = forEffectId;
-                        settings.EffectSettings.SelectedEffect = EffectsHelper.EffectLookup(forEffectId);
+                        settings.SelectedEffectId = forEffectId;
+                        settings.SelectedEffect = EffectsHelper.EffectLookup(forEffectId);
                         SaveSettings();
                         break;
                 }
@@ -79,12 +79,12 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
         private void Connection_OnPropertyInspectorDidAppear(object sender, SDEventReceivedEventArgs<BarRaider.SdTools.Events.PropertyInspectorDidAppear> e)
         {
             EffectsHelper.RefreshEffectsDatabase();
-            settings.EffectSettings.InstalledEffects = EffectsHelper.EffectSummaries;
-            Logger.Instance.LogMessage(TracingLevel.INFO, $"Sent {settings.EffectSettings.InstalledEffects.Count} effects to PI...");
+            settings.InstalledEffects = EffectsHelper.EffectSummaries;
+            Logger.Instance.LogMessage(TracingLevel.INFO, $"Sent {settings.InstalledEffects.Count} effects to PI...");
 
             LayoutsHelper.RefreshLayoutsDatabase();
-            settings.LayoutSettings.UserLayouts = LayoutsHelper.Layouts;
-            Logger.Instance.LogMessage(TracingLevel.INFO, $"Sent {settings.LayoutSettings.UserLayouts.Count} layouts to PI...");
+            settings.UserLayouts = LayoutsHelper.Layouts;
+            Logger.Instance.LogMessage(TracingLevel.INFO, $"Sent {settings.UserLayouts.Count} layouts to PI...");
 
             SaveSettings();
         }
@@ -138,16 +138,16 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
             Tools.AutoPopulateSettings(settings, payload.Settings);
 
             // Save the layout
-            settings.LayoutSettings.SelectedLayout = LayoutsHelper.LayoutLookup(settings.LayoutSettings.SelectedLayoutId);
+            settings.SelectedLayout = LayoutsHelper.LayoutLookup(settings.SelectedLayoutId);
             // custom effects-based (dynamic) settings handling
-            settings.EffectSettings.SelectedEffect = EffectsHelper.EffectLookup(settings.EffectSettings.SelectedEffectId);
+            settings.SelectedEffect = EffectsHelper.EffectLookup(settings.SelectedEffectId);
             foreach (var prop in payload.Settings)
             {
                 if (!prop.Key.Contains(SignalRgbEffectAction.EffectPropMarker))
                     continue;
 
                 var propKey = prop.Key.Replace(SignalRgbEffectAction.EffectPropMarker, string.Empty);
-                settings.EffectSettings.SelectedEffect.SetPropertyValue(propKey, prop.Value.ToString());
+                settings.SelectedEffect.SetPropertyValue(propKey, prop.Value.ToString());
             }
 
             UpdateEffectButtonTitle();
@@ -165,8 +165,12 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
 
         protected override void UpdateEffectButtonTitle()
         {
-            if (settings?.EffectSettings?.SelectedEffect != null && settings?.LayoutSettings?.SelectedLayout != null)
-                SetEffectButtonTitle($"{settings.EffectSettings.SelectedEffect.Name}-{settings.LayoutSettings.SelectedLayout.Name}");
+            if (settings?.SelectedEffect != null && settings?.SelectedLayout != null)
+                SetEffectButtonTitle($"{settings.SelectedEffect.Name}-{settings.SelectedLayout.Name}");
+            else if (settings?.SelectedEffect != null)
+                SetEffectButtonTitle(settings.SelectedEffect.Name);
+            else if (settings?.SelectedLayout != null)
+                SetEffectButtonTitle(settings.SelectedLayout.Name);
         }
 
         protected override Task SaveSettings()
@@ -178,8 +182,6 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
 
         #region SignalRGB Implementation
 
-        public override bool IsApplicationUrlSetValid => settings.EffectSettings.SelectedEffect != null;
-
         public override string[] ApplicationUrls
         {
             get
@@ -187,14 +189,14 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
                 var effectUrl = new StringBuilder();
                 effectUrl.Append("signalrgb://effect/apply/");
                 // add the effect's name
-                effectUrl.Append(Uri.EscapeDataString(settings.EffectSettings.SelectedEffect.Name));
+                effectUrl.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
                 // add the effect's settings
-                effectUrl.Append(settings.EffectSettings.SelectedEffect.PropsAsApplicationUrlArgString(true));
+                effectUrl.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
 
                 var layoutUrl = new StringBuilder();
                 layoutUrl.Append("signalrgb://layout/apply/");
                 // add the effect's name
-                layoutUrl.Append(Uri.EscapeDataString(settings.LayoutSettings.SelectedLayout.Name));
+                layoutUrl.Append(Uri.EscapeDataString(settings.SelectedLayout.Name));
                 // direction for silent launch
                 layoutUrl.Append($"?{SilentLaunchRequest}");
 

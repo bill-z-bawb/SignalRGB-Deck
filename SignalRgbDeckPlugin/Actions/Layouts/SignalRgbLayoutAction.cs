@@ -75,8 +75,6 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
 
         #region SignalRGB Implementation
 
-        public override bool IsApplicationUrlSetValid => settings.SelectedLayout != null;
-
         public override string[] ApplicationUrls
         {
             get
