@@ -17,6 +17,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Publish|AnyCPU'">
     <OutputPath>bin\Release\com.billzbawb.signalrgb.sdPlugin\</OutputPath>
     <Optimize>True</Optimize>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutputPath>bin\Release\com.billzbawb.signalrgb.sdPlugin\</OutputPath>
@@ -24,6 +25,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Publish|x64'">
     <OutputPath>bin\Release\com.billzbawb.signalrgb.sdPlugin\</OutputPath>
     <Optimize>True</Optimize>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\com.billzbawb.signalrgb.sdPlugin\</OutputPath>
