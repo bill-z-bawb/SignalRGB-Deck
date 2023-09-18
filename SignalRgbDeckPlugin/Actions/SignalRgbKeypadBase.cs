@@ -2,6 +2,8 @@
 using BarRaider.SdTools.Wrappers;
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SignalRgbDeckPlugin.Actions
@@ -10,12 +12,11 @@ namespace SignalRgbDeckPlugin.Actions
     {
         public const string SilentLaunchRequest = "-silentlaunch-";
 
-        public abstract bool IsApplicationUrlValid { get; }
-        public abstract string ApplicationUrl { get; }
+        public abstract string[] ApplicationUrls { get; }
 
         #region Private Members
 
-        protected TitleParameters _currenTitleParameters = null;
+        protected TitleParameters CurrentTitleParameters = null;
 
         #endregion
 
@@ -62,7 +63,7 @@ namespace SignalRgbDeckPlugin.Actions
 
         protected virtual void Connection_OnTitleParametersDidChange(object sender, SDEventReceivedEventArgs<BarRaider.SdTools.Events.TitleParametersDidChange> e)
         {
-            _currenTitleParameters = e.Event.Payload.TitleParameters;
+            CurrentTitleParameters = e.Event.Payload.TitleParameters;
             UpdateEffectButtonTitle();
         }
 
@@ -108,8 +109,20 @@ namespace SignalRgbDeckPlugin.Actions
 
         public override void KeyReleased(KeyPayload payload)
         {
-            if (IsApplicationUrlValid)
-                OpenWebsite(ApplicationUrl);
+            foreach (var applicationUrl in ApplicationUrls)
+            {
+                try
+                {
+                    OpenWebsite(applicationUrl);
+                    // jank AF, but there is no way to verify if a command has been process and if given too many command near the same time
+                    // only the "last" will be processed.
+                    Thread.Sleep(1000);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Instance.LogMessage(TracingLevel.ERROR, $"{nameof(SignalRgbKeypadBase)} => {GetType()} KeyReleased failed for url \"{applicationUrl}\"! {ex.Message}");
+                }
+            }
         }
 
         private static void OpenWebsite(string url) =>
@@ -126,7 +139,7 @@ namespace SignalRgbDeckPlugin.Actions
 
         protected virtual void SetEffectButtonTitle(string title)
         {
-            Connection.SetTitleAsync(title.SplitToFitKey(_currenTitleParameters));
+            Connection.SetTitleAsync(title.SplitToFitKey(CurrentTitleParameters));
         }
 
         protected virtual Task SaveSettings()

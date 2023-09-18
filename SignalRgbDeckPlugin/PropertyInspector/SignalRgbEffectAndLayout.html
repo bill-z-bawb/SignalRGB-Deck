@@ -5,20 +5,37 @@
     <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
     <meta name=apple-mobile-web-app-capable content=yes>
     <meta name=apple-mobile-web-app-status-bar-style content=black>
-    <title>SignalRGB Layout Settings</title>
+    <title>SignalRGB Effect Settings</title>
     <link rel="stylesheet" href="sdpi.css">
     <script src="sdtools.common.js"></script>
+    <script src="SignalRgbEffect.js"></script>
 </head>
 <body>
     <hr />
     <div type="group" class="sdpi-item" id="dvEffectWrapper">
-        <div class="sdpi-item-label" id="layoutsGroupLabel">Choose the SignalRGB Layout for this action</div>
+        <div class="sdpi-item-label" id="effectsGroupLabel">Choose the SignalRGB Layout and Effect for this action</div>
         <div class="sdpi-wrapper" id="dvSdpiWrapper">
             <div class="sdpi-item" id="dvLayout">
                 <div class="sdpi-item-label">SignalRGB Layout</div>
                 <select class="sdpi-item-value select sdProperty sdList" id="userLayouts" oninput="setSettings()" sdListTextProperty="name" sdListValueProperty="id" sdValueField="selectedLayoutId"></select>
             </div>
+            <div class="sdpi-item" id="dvEffect">
+                <div class="sdpi-item-label">SignalRGB Effect</div>
+                <select class="sdpi-item-value select sdProperty sdList" id="installedEffects" oninput="handleNewEffectSelection()" sdListTextProperty="name" sdListValueProperty="id" sdValueField="selectedEffectId"></select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Missing Effects?</div>
+                <details class="sdpi-item-value">
+                    <summary>Click for more info...</summary>
+                    <p>The dropdown menu will only show SignalRGB Effects that are installed on your machine. To use an Effect from your StreamDeck, first go to the SignalRGB app Library section and install the desired effects.</p>
+                    <p>hint: You can see what Effects are currently installed in the SignalRGB "Installed" section.</p>
+                </details>
+            </div>
         </div>
+    </div>
+    <hr />
+    <div type="group" class="sdpi-item" id="dvEffectsParamWrapper">
+        <div class="sdpi-item-label" id="effectsSettingsGroupLabel">Effect Settings</div>
     </div>
     <hr />
     <div type="group" class="sdpi-item" id="dvIssuesWrapper">

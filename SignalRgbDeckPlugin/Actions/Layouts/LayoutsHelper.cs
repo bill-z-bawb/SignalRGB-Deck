@@ -28,6 +28,9 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
 
         public static UserLayout LayoutLookup(string forLayoutId)
         {
+            if (string.IsNullOrWhiteSpace(forLayoutId))
+                return null;
+            
             if (!LayoutsDatabase?.Any() ?? true)
             {
                 RefreshLayoutsDatabase();

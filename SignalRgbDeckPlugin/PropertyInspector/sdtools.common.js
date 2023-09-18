@@ -350,12 +350,12 @@ function sendValueToPlugin(value, param) {
     }
 }
 
-function openWebsite() {
+function openWebsite(url) {
     if (websocket && (websocket.readyState === 1)) {
         const json = {
             'event': 'openUrl',
             'payload': {
-                'url': 'https://BarRaider.github.io'
+                'url': url
             }
         };
         websocket.send(JSON.stringify(json));

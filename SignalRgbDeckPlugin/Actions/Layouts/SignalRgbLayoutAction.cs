@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using BarRaider.SdTools;
 using BarRaider.SdTools.Wrappers;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace SignalRgbDeckPlugin.Actions.Layouts
@@ -12,32 +10,6 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
     [PluginActionId("com.billzbawb.signalrgb.layout")]
     public class SignalRgbLayoutAction : SignalRgbKeypadBase
     {
-        #region Layout Action Settings
-
-        private class LayoutActionSettings
-        {
-            public static LayoutActionSettings CreateDefaultSettings()
-            {
-                var instance = new LayoutActionSettings
-                {
-                    SelectedLayoutId = string.Empty,
-                    UserLayouts = new List<UserLayout>(),
-                };
-                return instance;
-            }
-
-            [JsonProperty(PropertyName = "selectedLayoutId")]
-            public string SelectedLayoutId { get; set; }
-
-            [JsonProperty(PropertyName = "selectedLayout")]
-            public UserLayout SelectedLayout { get; set; }
-
-            [JsonProperty(PropertyName = "userLayouts")]
-            public List<UserLayout> UserLayouts { get; set; }
-        }
-
-        #endregion
-
         #region Private Members
 
         private readonly LayoutActionSettings settings;
@@ -103,22 +75,20 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
 
         #region SignalRGB Implementation
 
-        public override bool IsApplicationUrlValid => settings.SelectedLayout != null;
-
-        public override string ApplicationUrl
+        public override string[] ApplicationUrls
         {
             get
             {
                 var url = new StringBuilder();
                 url.Append("signalrgb://layout/apply/");
 
-                // add the effect's name
+                // add the layout's name
                 url.Append(Uri.EscapeDataString(settings.SelectedLayout.Name));
                 
                 // direction for silent launch
                 url.Append($"?{SilentLaunchRequest}");
 
-                return url.ToString();
+                return new[] { url.ToString() };
             }
         }
 

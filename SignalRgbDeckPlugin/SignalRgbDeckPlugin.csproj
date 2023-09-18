@@ -58,6 +58,8 @@
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="PropertyInspector\SignalRgbDefault.html" />
+	  <None Remove="PropertyInspector\SignalRgbEffectAndLayout.html" />
 	  <None Remove="PropertyInspector\SignalRgbLayout.html" />
 	</ItemGroup>
   <ItemGroup>
@@ -74,6 +76,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="PropertyInspector\elg_calendar_inv.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PropertyInspector\SignalRgbEffectAndLayout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PropertyInspector\SignalRgbDefault.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="PropertyInspector\SignalRgbLayout.html">
