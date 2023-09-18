@@ -76,6 +76,21 @@
       "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectAndLayout.html"
     },
     {
+      "Icon": "Images/Actions/LayoutEffectCombo/actionList-previous-effect-and-layout",
+      "Name": "SignalRGB Previous Effect & Layout",
+      "States": [
+        {
+          "Image": "Images/Actions/LayoutEffectCombo/action-previous-effect-and-layout",
+          "TitleAlignment": "middle",
+          "FontSize": "12"
+        }
+      ],
+      "SupportedInMultiActions": true,
+      "Tooltip": "Create a shortcut that sets both the previous SignalRGB effect and layout.",
+      "UUID": "com.billzbawb.signalrgb.previouseffectandlayout",
+      "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
+    },
+    {
       "Icon": "Images/Actions/Dashboard/actionList-home",
       "Name": "SignalRGB Home View",
       "States": [
