@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using BarRaider.SdTools;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -43,6 +44,36 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             "values",
             "default",
         };
+
+        internal static readonly string[] ValidEffectPresets = new[] { "a", "b", "c" };
+
+        internal static bool IsValidPreset(string preset)
+        {
+            return !string.IsNullOrWhiteSpace(preset) &&
+                   ValidEffectPresets.Any(p => p.Equals(preset, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        internal static string BuildEffectUrlFromSettings(IEffectActionSettings settings)
+        {
+            var url = new StringBuilder();
+
+            if (IsValidPreset(settings.SelectedEffectPreset))
+            {
+                url.Append("signalrgb://effect/applypreset/");
+                url.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
+                url.Append($"/{settings.SelectedEffectPreset}");
+                url.Append($"?{SignalRgbKeypadBase.SilentLaunchRequest}");
+            }
+            else // use settings
+            {
+                url.Append("signalrgb://effect/apply/");
+                url.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
+                // add the effect's settings
+                url.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
+            }
+
+            return url.ToString();
+        }
 
         internal static DirectoryInfo GetInstalledEffectsPathForAppVersion(DirectoryInfo appVer) =>
             GetInstalledEffectsPathForAppVersion(appVer.FullName);

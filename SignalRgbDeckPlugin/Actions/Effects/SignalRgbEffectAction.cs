@@ -15,6 +15,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         public const string EffectPropMarker = "-effect-prop";
         private readonly EffectActionSettings settings;
         
+        
         #endregion
 
         #region Construction / Destruction
@@ -174,19 +175,12 @@ namespace SignalRgbDeckPlugin.Actions.Effects
         {
             get
             {
-                var url = new StringBuilder();
-                url.Append("signalrgb://effect/apply/");
-
-                // add the effect's name
-                url.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
-
-                // add the effect's settings
-                url.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
-
-                return new []{ url.ToString() };
+                return new []{ EffectsHelper.BuildEffectUrlFromSettings(settings) };
             }
         }
 
         #endregion
+        
+        private bool ShouldUsePreset => EffectsHelper.IsValidPreset(settings.SelectedEffectPreset);
     }
 }

@@ -19,6 +19,15 @@
                 <div class="sdpi-item-label">SignalRGB Effect</div>
                 <select class="sdpi-item-value select sdProperty sdList" id="installedEffects" oninput="handleNewEffectSelection()" sdListTextProperty="name" sdListValueProperty="id" sdValueField="selectedEffectId"></select>
             </div>
+            <div class="sdpi-item" id="dvEffectPreset">
+                <div class="sdpi-item-label">Effect Preset</div>
+                <select class="sdpi-item-value select sdProperty" id="selectedEffectPreset" oninput="setSettings()" value="none">
+                    <option value="none">None (use settings below)</option>
+                    <option value="a">A</option>
+                    <option value="b">B</option>
+                    <option value="c">C</option>
+                </select>
+            </div>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Missing Effects?</div>
                 <details class="sdpi-item-value">

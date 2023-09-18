@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
 {
-    public class EffectAndLayoutComboActionSettings
+    public class EffectAndLayoutComboActionSettings : EffectActionSettings, ILayoutActionSettings
     {
         public static EffectAndLayoutComboActionSettings CreateDefaultSettings()
         {
@@ -22,16 +22,6 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
             return instance;
         }
 
-        // Effect props
-        [JsonProperty(PropertyName = "selectedEffectId")]
-        public string SelectedEffectId { get; set; }
-
-        [JsonProperty(PropertyName = "selectedEffect")]
-        public InstalledEffectDetail SelectedEffect { get; set; }
-
-        [JsonProperty(PropertyName = "installedEffects")]
-        public List<InstalledEffect> InstalledEffects { get; set; }
-
         // Layout props
         [JsonProperty(PropertyName = "selectedLayoutId")]
         public string SelectedLayoutId { get; set; }
@@ -41,26 +31,5 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
 
         [JsonProperty(PropertyName = "userLayouts")]
         public List<UserLayout> UserLayouts { get; set; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

@@ -186,12 +186,7 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
         {
             get
             {
-                var effectUrl = new StringBuilder();
-                effectUrl.Append("signalrgb://effect/apply/");
-                // add the effect's name
-                effectUrl.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
-                // add the effect's settings
-                effectUrl.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
+                var effectUrl = EffectsHelper.BuildEffectUrlFromSettings(settings);
 
                 var layoutUrl = new StringBuilder();
                 layoutUrl.Append("signalrgb://layout/apply/");
@@ -200,7 +195,7 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
                 // direction for silent launch
                 layoutUrl.Append($"?{SilentLaunchRequest}");
 
-                return new[] { effectUrl.ToString(), layoutUrl.ToString() };
+                return new[] { effectUrl, layoutUrl.ToString() };
             }
         }
 
