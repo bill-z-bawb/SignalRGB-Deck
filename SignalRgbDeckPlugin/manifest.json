@@ -75,7 +75,6 @@
       "UUID": "com.billzbawb.signalrgb.effectandlayoutcombo",
       "PropertyInspectorPath": "PropertyInspector/SignalRgbEffectAndLayout.html"
     },
-
     {
       "Icon": "Images/Actions/LayoutEffectCombo/actionList-previous-effect-and-layout",
       "Name": "SignalRGB Previous Effect & Layout",
@@ -91,7 +90,6 @@
       "UUID": "com.billzbawb.signalrgb.previouseffectandlayout",
       "PropertyInspectorPath": "PropertyInspector/SignalRgbDefault.html"
     },
-
     {
       "Icon": "Images/Actions/Dashboard/actionList-home",
       "Name": "SignalRGB Home View",
