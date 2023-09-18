@@ -3,6 +3,7 @@ using BarRaider.SdTools.Wrappers;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SignalRgbDeckPlugin.Actions
@@ -113,6 +114,9 @@ namespace SignalRgbDeckPlugin.Actions
                 try
                 {
                     OpenWebsite(applicationUrl);
+                    // jank AF, but there is no way to verify if a command has been process and if given too many command near the same time
+                    // only the "last" will be processed.
+                    Thread.Sleep(1000);
                 }
                 catch (Exception ex)
                 {
