@@ -1,6 +1,9 @@
 ﻿using Microsoft.Win32;
+using SignalRgbDeckPlugin.Actions.Effects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace SignalRgbDeckPlugin.Actions.Layouts
 {
@@ -37,6 +40,18 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
             }
 
             return LayoutsDatabase[forLayoutId];
+        }
+
+        public static string BuildLayoutUrlFromSettings(ILayoutActionSettings settings)
+        {
+            var layoutUrl = new StringBuilder();
+            layoutUrl.Append("signalrgb://layout/apply/");
+            // add the effect's name
+            layoutUrl.Append(Uri.EscapeDataString(settings.SelectedLayout.Name));
+            // direction for silent launch
+            layoutUrl.Append($"?{SignalRgbKeypadBase.SilentLaunchRequest}");
+
+            return layoutUrl.ToString();
         }
     }
 }

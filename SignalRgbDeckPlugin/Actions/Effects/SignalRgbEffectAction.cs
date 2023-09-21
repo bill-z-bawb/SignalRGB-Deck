@@ -1,8 +1,6 @@
 ﻿using BarRaider.SdTools;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -171,16 +169,8 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         #region SignalRGB Implementation
 
-        public override string[] ApplicationUrls
-        {
-            get
-            {
-                return new []{ EffectsHelper.BuildEffectUrlFromSettings(settings) };
-            }
-        }
+        public override string[] ApplicationUrls => EffectsHelper.BuildEffectUrlsFromSettings(settings);
 
         #endregion
-        
-        private bool ShouldUsePreset => EffectsHelper.IsValidPreset(settings.SelectedEffectPreset);
     }
 }

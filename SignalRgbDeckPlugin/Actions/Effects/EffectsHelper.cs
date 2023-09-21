@@ -53,27 +53,33 @@ namespace SignalRgbDeckPlugin.Actions.Effects
                    ValidEffectPresets.Any(p => p.Equals(preset, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        internal static string BuildEffectUrlFromSettings(IEffectActionSettings settings)
+        internal static string[] BuildEffectUrlsFromSettings(IEffectActionSettings settings)
         {
-            var url = new StringBuilder();
-
-            if (IsValidPreset(settings.SelectedEffectPreset))
+            var switchingUrl = new StringBuilder();
+            
+            switchingUrl.Append("signalrgb://effect/apply/");
+            switchingUrl.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
+            
+            if (!IsValidPreset(settings.SelectedEffectPreset))
             {
-                url.Append("signalrgb://effect/applypreset/");
-                url.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
-                url.Append($"/{settings.SelectedEffectPreset}");
-                url.Append($"?{SignalRgbKeypadBase.SilentLaunchRequest}");
-            }
-            else // use settings
-            {
-                url.Append("signalrgb://effect/apply/");
-                url.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
                 // add the effect's settings
-                url.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
+                switchingUrl.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
+                return new[] { switchingUrl.ToString() };
             }
 
-            return url.ToString();
+            switchingUrl.Append($"?{SignalRgbKeypadBase.SilentLaunchRequest}");
+
+            // otherwise, ignore settings, just change to the effect and then set the preset
+            // the applypreset url does not change the current effect
+            var presetUrl = new StringBuilder();
+            presetUrl.Append("signalrgb://effect/applypreset/");
+            presetUrl.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
+            presetUrl.Append($"/{settings.SelectedEffectPreset}");
+            presetUrl.Append($"?{SignalRgbKeypadBase.SilentLaunchRequest}");
+
+            return new[] { switchingUrl.ToString(), presetUrl.ToString() };
         }
+
 
         internal static DirectoryInfo GetInstalledEffectsPathForAppVersion(DirectoryInfo appVer) =>
             GetInstalledEffectsPathForAppVersion(appVer.FullName);
