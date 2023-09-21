@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using SignalRgbDeckPlugin.Actions.Effects;
 using SignalRgbDeckPlugin.Actions.Layouts;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -186,21 +187,14 @@ namespace SignalRgbDeckPlugin.Actions.EffectAndLayoutCombo
         {
             get
             {
-                var effectUrl = new StringBuilder();
-                effectUrl.Append("signalrgb://effect/apply/");
-                // add the effect's name
-                effectUrl.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
-                // add the effect's settings
-                effectUrl.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
+                var effectUrls = EffectsHelper.BuildEffectUrlsFromSettings(settings);
+                var layoutUrl = LayoutsHelper.BuildLayoutUrlFromSettings(settings);
 
-                var layoutUrl = new StringBuilder();
-                layoutUrl.Append("signalrgb://layout/apply/");
-                // add the effect's name
-                layoutUrl.Append(Uri.EscapeDataString(settings.SelectedLayout.Name));
-                // direction for silent launch
-                layoutUrl.Append($"?{SilentLaunchRequest}");
+                var urls = new List<string>();
+                urls.AddRange(effectUrls);
+                urls.Add(layoutUrl);
 
-                return new[] { effectUrl.ToString(), layoutUrl.ToString() };
+                return urls.ToArray();
             }
         }
 

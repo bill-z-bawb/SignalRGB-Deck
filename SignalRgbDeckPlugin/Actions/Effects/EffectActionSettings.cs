@@ -3,18 +3,22 @@ using Newtonsoft.Json;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
 {
-    public class EffectActionSettings
+    public class EffectActionSettings : IEffectActionSettings
     {
         public static EffectActionSettings CreateDefaultSettings()
         {
             var instance = new EffectActionSettings
             {
                 SelectedEffectId = string.Empty,
+                SelectedEffectPreset = "none",
                 SelectedEffect = null,
                 InstalledEffects = new List<InstalledEffect>(),
             };
             return instance;
         }
+
+        [JsonProperty(PropertyName = "selectedEffectPreset")]
+        public string SelectedEffectPreset { get; set; } = "none";
 
         [JsonProperty(PropertyName = "selectedEffectId")]
         public string SelectedEffectId { get; set; }

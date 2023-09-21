@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SignalRgbDeckPlugin.Actions.Layouts
 {
-    public class LayoutActionSettings
+    public class LayoutActionSettings : ILayoutActionSettings
     {
         public static LayoutActionSettings CreateDefaultSettings()
         {

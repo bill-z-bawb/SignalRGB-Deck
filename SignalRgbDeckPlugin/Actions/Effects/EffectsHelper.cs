@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using BarRaider.SdTools;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -43,6 +44,42 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             "values",
             "default",
         };
+
+        internal static readonly string[] ValidEffectPresets = new[] { "a", "b", "c" };
+
+        internal static bool IsValidPreset(string preset)
+        {
+            return !string.IsNullOrWhiteSpace(preset) &&
+                   ValidEffectPresets.Any(p => p.Equals(preset, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        internal static string[] BuildEffectUrlsFromSettings(IEffectActionSettings settings)
+        {
+            var switchingUrl = new StringBuilder();
+            
+            switchingUrl.Append("signalrgb://effect/apply/");
+            switchingUrl.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
+            
+            if (!IsValidPreset(settings.SelectedEffectPreset))
+            {
+                // add the effect's settings
+                switchingUrl.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
+                return new[] { switchingUrl.ToString() };
+            }
+
+            switchingUrl.Append($"?{SignalRgbKeypadBase.SilentLaunchRequest}");
+
+            // otherwise, ignore settings, just change to the effect and then set the preset
+            // the applypreset url does not change the current effect
+            var presetUrl = new StringBuilder();
+            presetUrl.Append("signalrgb://effect/applypreset/");
+            presetUrl.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
+            presetUrl.Append($"/{settings.SelectedEffectPreset}");
+            presetUrl.Append($"?{SignalRgbKeypadBase.SilentLaunchRequest}");
+
+            return new[] { switchingUrl.ToString(), presetUrl.ToString() };
+        }
+
 
         internal static DirectoryInfo GetInstalledEffectsPathForAppVersion(DirectoryInfo appVer) =>
             GetInstalledEffectsPathForAppVersion(appVer.FullName);

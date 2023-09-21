@@ -79,16 +79,7 @@ namespace SignalRgbDeckPlugin.Actions.Layouts
         {
             get
             {
-                var url = new StringBuilder();
-                url.Append("signalrgb://layout/apply/");
-
-                // add the layout's name
-                url.Append(Uri.EscapeDataString(settings.SelectedLayout.Name));
-                
-                // direction for silent launch
-                url.Append($"?{SilentLaunchRequest}");
-
-                return new[] { url.ToString() };
+                return new[] { LayoutsHelper.BuildLayoutUrlFromSettings(settings) };
             }
         }
 

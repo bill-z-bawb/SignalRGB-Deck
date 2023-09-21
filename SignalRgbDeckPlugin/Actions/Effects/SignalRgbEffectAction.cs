@@ -1,8 +1,6 @@
 ﻿using BarRaider.SdTools;
 using BarRaider.SdTools.Wrappers;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SignalRgbDeckPlugin.Actions.Effects
@@ -14,6 +12,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         public const string EffectPropMarker = "-effect-prop";
         private readonly EffectActionSettings settings;
+        
         
         #endregion
 
@@ -170,22 +169,7 @@ namespace SignalRgbDeckPlugin.Actions.Effects
 
         #region SignalRGB Implementation
 
-        public override string[] ApplicationUrls
-        {
-            get
-            {
-                var url = new StringBuilder();
-                url.Append("signalrgb://effect/apply/");
-
-                // add the effect's name
-                url.Append(Uri.EscapeDataString(settings.SelectedEffect.Name));
-
-                // add the effect's settings
-                url.Append(settings.SelectedEffect.PropsAsApplicationUrlArgString(true));
-
-                return new []{ url.ToString() };
-            }
-        }
+        public override string[] ApplicationUrls => EffectsHelper.BuildEffectUrlsFromSettings(settings);
 
         #endregion
     }
