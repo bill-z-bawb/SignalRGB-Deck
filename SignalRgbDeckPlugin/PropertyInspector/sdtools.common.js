@@ -188,8 +188,10 @@ function getCheckboxInputElement(prop) {
     newFieldInput.setAttribute('class', 'sdpi-item-value sdCheckbox sdProperty effect-prop-value');
     newFieldInput.setAttribute('oninput', 'setSettings()');
 
-    if (prop.value && prop.value !== '0' && prop.value.toLowerCase() !== 'off' && prop.value.toLowerCase() !== 'false')
-        newFieldInput.checked = true;
+    const checkboxValue = prop.value === null || prop.value === undefined || prop.value === ''
+        ? prop.default
+        : prop.value;
+    newFieldInput.checked = isBooleanEffectValueEnabled(checkboxValue);
 
     var checkboxLabel = document.createElement('label');
     var emptySpan = document.createElement('span');
@@ -201,6 +203,17 @@ function getCheckboxInputElement(prop) {
     divContainer.appendChild(checkboxLabel);
     
     return divContainer;
+}
+
+function isBooleanEffectValueEnabled(value) {
+    if (value === true)
+        return true;
+
+    if (value === false || value === null || value === undefined)
+        return false;
+
+    const normalizedValue = String(value).trim().toLowerCase();
+    return normalizedValue === '1' || normalizedValue === 'true' || normalizedValue === 'on';
 }
 
 function getInputDivContainer() {
