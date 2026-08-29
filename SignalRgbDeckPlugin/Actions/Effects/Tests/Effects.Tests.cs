@@ -154,5 +154,38 @@ namespace SignalRgbDeckPlugin.Actions.Effects.Tests
             Assert.NotNull(cast.Id);
             Assert.NotEqual(string.Empty, cast.Id);
         }
+
+        [Theory]
+        [InlineData("True", "true")]
+        [InlineData("true", "true")]
+        [InlineData("1", "true")]
+        [InlineData("on", "true")]
+        [InlineData("False", "false")]
+        [InlineData("false", "false")]
+        [InlineData("0", "false")]
+        [InlineData("off", "false")]
+        public void boolean_values_are_normalized_for_signalrgb_urls(string input, string expected)
+        {
+            var effectFile = EffectsTestsHelper.InstalledEffectsFiles.First(f => f.Name.Equals("Side To Side.html"));
+            var parsed = InstalledEffectDetail.EffectFromHtml(effectFile);
+
+            parsed.SetPropertyValue("rainbow", input);
+
+            var query = parsed.PropsAsApplicationUrlArgString(false);
+            Assert.Contains($"rainbow={expected}", query);
+        }
+
+        [Fact]
+        public void legacy_saved_boolean_is_normalized_when_url_is_built()
+        {
+            var effectFile = EffectsTestsHelper.InstalledEffectsFiles.First(f => f.Name.Equals("Side To Side.html"));
+            var parsed = InstalledEffectDetail.EffectFromHtml(effectFile);
+            parsed.Properties.First(p => p.PropertyName.Equals("rainbow")).Value = "True";
+
+            var query = parsed.PropsAsApplicationUrlArgString(false);
+
+            Assert.Contains("rainbow=true", query);
+            Assert.DoesNotContain("rainbow=True", query);
+        }
     }
 }

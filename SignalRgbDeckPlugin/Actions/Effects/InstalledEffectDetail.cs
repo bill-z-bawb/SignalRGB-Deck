@@ -24,7 +24,21 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             if (matchingEffectProp == null)
                 return;
 
-            matchingEffectProp.Value = val;
+            matchingEffectProp.Value = matchingEffectProp.Type.Equals("boolean", StringComparison.InvariantCultureIgnoreCase)
+                ? NormalizeBooleanValue(val)
+                : val;
+        }
+
+        private static string NormalizeBooleanValue(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return "false";
+
+            return value.Equals("1", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("true", StringComparison.InvariantCultureIgnoreCase) ||
+                   value.Equals("on", StringComparison.InvariantCultureIgnoreCase)
+                ? "true"
+                : "false";
         }
 
         public InstalledEffect ToInstalledEffect()
@@ -39,6 +53,9 @@ namespace SignalRgbDeckPlugin.Actions.Effects
             foreach (var effectProperty in Properties)
             {
                 var val = string.IsNullOrWhiteSpace(effectProperty.Value) ? effectProperty.Default : effectProperty.Value;
+                if (effectProperty.Type.Equals("boolean", StringComparison.InvariantCultureIgnoreCase))
+                    val = NormalizeBooleanValue(val);
+
                 args.Append($"{argPrefix}{Uri.EscapeDataString(effectProperty.PropertyName)}={Uri.EscapeDataString(val)}");
                 argPrefix = "&";
             }
